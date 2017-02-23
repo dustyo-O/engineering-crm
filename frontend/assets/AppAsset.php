@@ -19,6 +19,7 @@ class AppAsset extends AssetBundle
         'http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700', // TODO make local open sans asset
         'css/font-awesome.min.css',
         'css/site.css',
+        'css/style.css',
     ];
     public $js = [
         'js/app.config.js',

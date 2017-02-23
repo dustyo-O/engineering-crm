@@ -1,0 +1,21 @@
+{
+  "name": "engineering-crm",
+  "homepage": "https://github.com/dustyo-O/engineering-crm",
+  "authors": [
+    "Alexandr Shleyko <dusty@yandex-team.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "select2": "^4.0.3"
+  }
+}

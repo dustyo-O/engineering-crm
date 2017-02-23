@@ -5,12 +5,22 @@
  * Date: 08.02.17
  * Time: 22:58
  */
+/* @var $this \yii\web\View */
 
+use app\assets\Select2Asset;
+
+
+Select2Asset::register($this);
+
+$this->registerJs(<<<JS
+$('article select').select2({
+  minimumResultsForSearch: Infinity
+});
+JS
+);
 ?>
-
 <!-- row -->
 <div class="row">
-
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <form action="" id="customer_form">
@@ -19,13 +29,9 @@
                 <header>
                     <span class="widget-icon"> <i class="fa fa-briefcase"></i> </span>
                     <h2>Customer information</h2>
-
                 </header>
-
                 <!-- widget div-->
                 <div>
-
-
                     <!-- widget content -->
                     <div class="widget-body">
                         <div>
@@ -86,7 +92,7 @@
                                         <h3>System Type</h3>
                                         <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
                                         <label class="select with-plus-btn">
-                                            <select id="job_type" class="input-sm">
+                                            <select id="job_type" class="form-control">
                                                 <option value="0">Choose one...</option>
                                                 <option>Repair</option>
                                                 <option>Build new house</option>
@@ -98,7 +104,7 @@
                                         <h3>Status</h3>
                                         <button class="btn btn-success btn-circle btn-append" type="button"><i class="fa fa-plus"></i></button>
                                         <label class="select with-plus-btn">
-                                            <select id="status" class="input-sm">
+                                            <select id="status" class="form-control">
                                                 <option value="0">Choose one...</option>
                                                 <option>Order accepted</option>
                                                 <option>Waiting for payment</option>
@@ -190,7 +196,7 @@
                                     <h3>Quote Status</h3>
                                     <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
                                     <label class="select with-plus-btn">
-                                        <select id="job_type" class="input-sm">
+                                        <select id="job_type" class="form-control">
                                             <option value="0">Choose one...</option>
                                             <option>Repair</option>
                                             <option>Build new house</option>
@@ -206,7 +212,7 @@
                         </fieldset>
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>Documents</h3>
+                                <h3>Quote Documents</h3>
                                 <div class="dropzone" id="mydropzone"></div>
                             </div>
                         </div>
@@ -276,7 +282,7 @@
                                 <h3>Maintenance Contract</h3>
                                 <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
                                 <label class="select with-plus-btn">
-                                    <select id="maintenance_contract" class="input-sm">
+                                    <select id="maintenance_contract" class="form-control">
                                         <option value="0">Choose one...</option>
                                         <option>Simple</option>
                                         <option>Complex</option>
@@ -299,65 +305,126 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="smart-form">
-                            <fieldset>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <h3>Signalling Type</h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>Signalling Type</h3>
+                                <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                <label class="select with-plus-btn">
+                                    <select id="signalling_type" class="form-control">
+                                        <option value="0">No signalling...</option>
+                                        <option>Dog</option>
+                                    </select><i></i>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>URN</h3>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-slack"></i></span>
+                                    <input type="text" placeholder="URN" id="urn" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>NSi number</h3>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-slack"></i></span>
+                                    <input type="text" placeholder="NSi number" id="nsi_number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3>Maintenance Cost</h3>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                    <input type="text" placeholder="5000" id="Maintenance_cost" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>Monitoring Cost</h3>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                    <input type="text" placeholder="6790" id="urn" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                <label class="select with-plus-btn title">
+                                    <select id="signalling_type" class="form-control">
+                                        <option value="0">Other Costs</option>
+                                        <option>Dog</option>
+                                    </select><i></i>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-euro"></i></span>
+                                    <input type="text" placeholder="1200" id="other_costs" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="siderow">
+                                        <h3>Account Manager</h3>
                                         <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
                                         <label class="select with-plus-btn">
-                                            <select id="signalling_type" class="input-sm">
-                                                <option value="0">No signalling...</option>
+                                            <select id="signalling_type" class="form-control">
+                                                <option value="0">Other Costs</option>
                                                 <option>Dog</option>
                                             </select><i></i>
                                         </label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h3>URN</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-slack"></i></span>
-                                            <input type="text" placeholder="URN" id="urn" class="form-control">
-                                        </div>
+                                    <div class="siderow">
+                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                        <label class="select with-plus-btn">
+                                            <select id="signalling_type" class="form-control">
+                                                <option value="0">Misc 1</option>
+                                                <option>Dog</option>
+                                            </select><i></i>
+                                        </label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h3>NSi number</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-slack"></i></span>
-                                            <input type="text" placeholder="NSi number" id="nsi_number" class="form-control">
-                                        </div>
+                                    <div class="siderow">
+                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                        <label class="select with-plus-btn">
+                                            <select id="signalling_type" class="form-control">
+                                                <option value="0">No misc...</option>
+                                                <option>Dog</option>
+                                            </select><i></i>
+                                        </label>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </div>
-
-                        <div class="smart-form">
-                            <fieldset>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <h3>Maintenance Cost</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                                            <input type="text" placeholder="5000" id="Maintenance_cost" class="form-control">
-                                        </div>
+                                    <div class="siderow">
+                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                        <label class="select with-plus-btn">
+                                            <select id="signalling_type" class="form-control">
+                                                <option value="0">Misc 2</option>
+                                                <option>Dog</option>
+                                            </select><i></i>
+                                        </label>
                                     </div>
-                                    <div class="col-md-4">
-                                        <h3>Monitoring Cost</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                                            <input type="text" placeholder="6790" id="urn" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3>Other Costs</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-euro"></i></span>
-                                            <input type="text" placeholder="1200" id="other_costs" class="form-control">
-                                        </div>
+                                    <div class="siderow">
+                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
+                                        <label class="select with-plus-btn">
+                                            <select id="job_type" class="form-control">
+                                                <option value="0">Choose one...</option>
+                                                <option>Repair</option>
+                                                <option>Build new house</option>
+                                                <option>Glue Papers</option>
+                                            </select><i></i>
+                                        </label>
                                     </div>
                                 </div>
-                            </fieldset>
+                                <div class="col-md-6 address-container">
+                                    <h3>Notes</h3>
+                                    <textarea id="notes" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>Service & Maintenance Documents</h3>
+                                <div class="dropzone" id="mydropzone"></div>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>

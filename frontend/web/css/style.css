@@ -1,0 +1,71 @@
+label.with-plus-btn {
+    width: calc(100% - 40px);
+    top: -15px;
+    position: relative;
+}
+
+.siderow label.with-plus-btn, label.with-plus-btn.title {
+    top: 0;
+    position: static;
+}
+
+.btn-append {
+    float: right;
+    margin: 0 5px 0 2px;
+}
+
+.popover {
+    padding: 5px;
+    min-width: 200px
+}
+
+h3 + .input-group, h3 + .form-control, h3 + .dropzone, h3 + .btn-append {
+    margin-top: -18px;
+}
+
+.siderow h3 + .btn-append {
+    margin-top: 0;
+}
+
+#customer_search_wrapper .dt-toolbar {
+    display: none;
+}
+
+.fc-day-grid-container.fc-scroller {
+    min-height: 600px;
+}
+
+.smart-timeline-list li {
+    cursor:pointer;
+}
+
+@media (min-width:992px) {
+    .address-container
+    {
+        bottom: 0;
+        min-height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .address-container textarea
+    {
+        margin-bottom: 2em;
+        min-height: 80%;
+        box-sizing: border-box;
+    }
+
+}
+
+div[class^=col] {
+    margin-top: 3px;
+}
+
+select.form-control {
+    width: 100%;
+}
+
+.select2-container .select2-choice .select2-arrow b::before, .select2-selection__arrow b::before {
+    content: '';
+}
