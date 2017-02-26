@@ -1,29 +1,131 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dusty
- * Date: 08.02.17
- * Time: 22:58
- */
 /* @var $this \yii\web\View */
+/* @var $customer \common\models\Customer */
+/* @var $customer_system_types \common\models\CustomerSystemType[] */
+/* @var $customer_statuses \common\models\CustomerStatus[] */
+/* @var $customer_quote \common\models\CustomerQuote */
+/* @var $quote_statuses \common\models\QuoteStatus[] */
+/* @var $customer_general \common\models\CustomerGeneral */
+/* @var $general_maintenance_contracts \common\models\GeneralMaintenanceContract[] */
+/* @var $general_signalling_types \common\models\GeneralSignallingType[] */
+/* @var $general_other_labels \common\models\GeneralOtherLabel[] */
+/* @var $general_account_managers \common\models\GeneralAccountManager[] */
+/* @var $general_misc1 \common\models\GeneralMisc1[] */
+/* @var $general_misc1_labels \common\models\GeneralMisc1Label[] */
+/* @var $general_misc2 \common\models\GeneralMisc2[] */
+/* @var $general_misc2_labels \common\models\GeneralMisc2Label[] */
 
+use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 use app\assets\Select2Asset;
-
+use app\assets\ToastAsset;
 
 Select2Asset::register($this);
+ToastAsset::register($this);
+
+$model_add_ajax_url = Url::to(['ajax/model-add']);
 
 $this->registerJs(<<<JS
+const SUCCESS_COLOR = '#71843f';
+const ERROR_COLOR = '#a90329';
+
 $('article select').select2({
-  minimumResultsForSearch: Infinity
+    minimumResultsForSearch: Infinity
+});
+
+$(".btn-append").popover(
+    {
+        'title': 'Add new element',
+        'html': true,
+        'content': '<label class="input"><input type="text"/></label><button class="btn btn-default btn-block btn-popover" type="button"><i class="fa fa-check"></i> Add</button>'
+    }
+);
+
+$(document).on('click','.btn-popover', function () {
+    var select = $(this).parent().parent().next().find("select");
+    var value = $(this).prev().find("input").val();
+
+    var selectName = select.prop('name');
+    
+    var baseModel = selectName.substring(0, selectName.indexOf('[')).toLowerCase();
+    var field = selectName.substring(selectName.indexOf('[') + 1, selectName.indexOf('_id]'));
+    
+    if (baseModel !== 'customer') baseModel = baseModel.replace('customer', '');
+    
+    // field name can start from base model name, but related model won't start with two same words
+    // example: Customer[customer_status_id] => customer_status => CustomerStatus (not CustomerCustomerStatus)
+    var modelName = (baseModel !== field.split('_')[0] ? baseModel + '_' : '').concat(field);
+    
+    // disable button
+    $(this).prop('disabled', 'disabled');
+    $('i', $(this)).removeClass('fa-check');
+    $('i', $(this)).addClass('fa-spinner');
+    $('i', $(this)).addClass('fa-pulse');
+    
+    $.ajax({
+        url: '{$model_add_ajax_url}',
+        method: 'post',
+        data: {
+            name: modelName,
+            title: value
+        },
+        type: 'json',
+        context: this
+    })
+    .done(function(response) {
+        select.append(
+            $('<option/>', { value: response.id, text: value })    
+        );
+        select.trigger('change');
+        
+        $.toast({
+            heading: 'Element Added',
+            text: 'New element added successfully - check the list',
+            icon: 'info',
+            loader: false,
+            loaderBg: SUCCESS_COLOR,
+            position: 'top-right'
+        });
+    })
+    .fail(function() {
+        $.toast({
+            heading: 'Error',
+            text: 'Element was not added. Try to repeat your request or refresh the page',
+            icon: 'error',
+            loader: false,
+            loaderBg: ERROR_COLOR,
+            position: 'top-right'
+        });            
+    })
+    .complete(function() {
+        // enable button
+        $(this).prop('disabled', false);
+        $('i', $(this)).addClass('fa-check');
+        $('i', $(this)).removeClass('fa-spinner');
+        $('i', $(this)).removeClass('fa-pulse');
+
+        $(this).parent().parent().popover('hide');        
+    });
 });
 JS
 );
+$dropdown_template_no_title = '
+    <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button">
+    <i class="fa fa-plus"></i></button>
+    <label class="select with-plus-btn title">
+        {input}
+    </label>';
+
+$dropdown_template = '<h3>{label}</h3>' . $dropdown_template_no_title;
 ?>
 <!-- row -->
 <div class="row">
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <form action="" id="customer_form">
+        <?php
+        $form = ActiveForm::begin(['options' => ['method' => 'post']]);
+        ?>
 
             <div class="jarviswidget">
                 <header>
@@ -89,33 +191,16 @@ JS
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <h3>System Type</h3>
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="job_type" class="form-control">
-                                                <option value="0">Choose one...</option>
-                                                <option>Repair</option>
-                                                <option>Build new house</option>
-                                                <option>Glue Papers</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer, 'system_type_id', ['template' => $dropdown_template])
+        ->dropDownList(ArrayHelper::map($customer_system_types, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                     <div class="col-md-4">
-                                        <h3>Status</h3>
-                                        <button class="btn btn-success btn-circle btn-append" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="status" class="form-control">
-                                                <option value="0">Choose one...</option>
-                                                <option>Order accepted</option>
-                                                <option>Waiting for payment</option>
-                                                <option>Work planned</option>
-                                                <option>Work in-action</option>
-                                                <option>Work paused</option>
-                                                <option>Work resumed</option>
-                                                <option>Work finished</option>
-                                                <option>Aborted</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer, 'customer_status_id', ['template' => $dropdown_template])
+        ->dropDownList(ArrayHelper::map($customer_statuses, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <h3>Account Number</h3>
@@ -193,16 +278,10 @@ JS
                                         <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
                                         <input type="text" placeholder="4353" id="quote_amount" class="form-control calendar" required="required">
                                     </div>
-                                    <h3>Quote Status</h3>
-                                    <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                    <label class="select with-plus-btn">
-                                        <select id="job_type" class="form-control">
-                                            <option value="0">Choose one...</option>
-                                            <option>Repair</option>
-                                            <option>Build new house</option>
-                                            <option>Glue Papers</option>
-                                        </select><i></i>
-                                    </label>
+<?=
+    $form->field($customer_quote, 'quote_status_id', ['template' => $dropdown_template])
+        ->dropDownList(ArrayHelper::map($quote_statuses, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                 </div>
                                 <div class="col-md-6 address-container">
                                     <h3>Notes</h3>
@@ -223,7 +302,7 @@ JS
             <div class="jarviswidget">
                 <header>
                     <span class="widget-icon"> <i class="fa fa-home"></i> </span>
-                    <h2>Facility info</h2>
+                    <h2>General info</h2>
 
                 </header>
 
@@ -279,16 +358,10 @@ JS
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <h3>Maintenance Contract</h3>
-                                <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                <label class="select with-plus-btn">
-                                    <select id="maintenance_contract" class="form-control">
-                                        <option value="0">Choose one...</option>
-                                        <option>Simple</option>
-                                        <option>Complex</option>
-                                        <option>Other</option>
-                                    </select><i></i>
-                                </label>
+<?=
+    $form->field($customer_general, 'maintenance_contract_id', ['template' => $dropdown_template])
+        ->dropDownList(ArrayHelper::map($general_maintenance_contracts, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                             </div>
                             <div class="col-md-4">
                                 <h3>Contract Start Date</h3>
@@ -307,14 +380,11 @@ JS
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <h3>Signalling Type</h3>
-                                <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                <label class="select with-plus-btn">
-                                    <select id="signalling_type" class="form-control">
-                                        <option value="0">No signalling...</option>
-                                        <option>Dog</option>
-                                    </select><i></i>
-                                </label>
+<?=
+    $form->field($customer_general, 'signalling_type_id', ['template' => $dropdown_template])
+        ->dropDownList(ArrayHelper::map($general_signalling_types, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
+
                             </div>
                             <div class="col-md-4">
                                 <h3>URN</h3>
@@ -348,13 +418,11 @@ JS
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                <label class="select with-plus-btn title">
-                                    <select id="signalling_type" class="form-control">
-                                        <option value="0">Other Costs</option>
-                                        <option>Dog</option>
-                                    </select><i></i>
-                                </label>
+<?=
+    $form->field($customer_general, 'signalling_type_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_signalling_types, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
+
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-euro"></i></span>
                                     <input type="text" placeholder="1200" id="other_costs" class="form-control">
@@ -365,52 +433,35 @@ JS
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="siderow">
-                                        <h3>Account Manager</h3>
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="signalling_type" class="form-control">
-                                                <option value="0">Other Costs</option>
-                                                <option>Dog</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+$form->field($customer_general, 'account_manager_id', ['template' => $dropdown_template])
+    ->dropDownList(ArrayHelper::map($general_account_managers, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                     <div class="siderow">
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="signalling_type" class="form-control">
-                                                <option value="0">Misc 1</option>
-                                                <option>Dog</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer_general, 'misc1_label_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_misc1_labels, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
+
                                     </div>
                                     <div class="siderow">
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="signalling_type" class="form-control">
-                                                <option value="0">No misc...</option>
-                                                <option>Dog</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer_general, 'misc1_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_misc1, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                     <div class="siderow">
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="signalling_type" class="form-control">
-                                                <option value="0">Misc 2</option>
-                                                <option>Dog</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer_general, 'misc2_label_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_misc2_labels, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                     <div class="siderow">
-                                        <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button"><i class="fa fa-plus"></i></button>
-                                        <label class="select with-plus-btn">
-                                            <select id="job_type" class="form-control">
-                                                <option value="0">Choose one...</option>
-                                                <option>Repair</option>
-                                                <option>Build new house</option>
-                                                <option>Glue Papers</option>
-                                            </select><i></i>
-                                        </label>
+<?=
+    $form->field($customer_general, 'misc2_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_misc2, 'id', 'title'), ['prompt' => 'Choose one...']);
+?>
                                     </div>
                                 </div>
                                 <div class="col-md-6 address-container">
@@ -429,7 +480,9 @@ JS
                 </div>
             </div>
             <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button><button class="btn btn-default btn-lg" type="reset">Cancel</button><button class="btn btn-danger pull-right delete-btn"><i class="fa fa-trash-o"></i> Delete</button>
-        </form>
+        <?php
+            ActiveForm::end();
+        ?>
     </article>
     <!-- WIDGET END -->
 

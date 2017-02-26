@@ -23,10 +23,10 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/app.config.js',
-        'js/notification/SmartNotification.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapPluginAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
 }
