@@ -117,7 +117,23 @@ $dropdown_template_no_title = '
         {input}
     </label>';
 
-$dropdown_template = '<h3>{label}</h3>' . $dropdown_template_no_title;
+$dropdown_template = '<h3>{label}</h3>
+    <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button">
+    <i class="fa fa-plus"></i></button>
+    <label class="select with-plus-btn">
+        {input}
+    </label>';
+
+function inputTemplate($icon)
+{
+    return <<<HTML
+<h3>{label}</h3>
+<div class="input-group">
+    <span class="input-group-addon"><i class="fa {$icon}"></i></span>
+    {input}
+</div>
+HTML;
+}
 ?>
 <!-- row -->
 <div class="row">
@@ -140,26 +156,25 @@ $dropdown_template = '<h3>{label}</h3>' . $dropdown_template_no_title;
                             <fieldset>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3>Customer</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-male"></i></span>
-                                            <input type="text" placeholder="Steve Defries" id="customer_name" class="form-control" required="required">
-                                        </div>
-                                        <h3>Contact</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
-                                            <input type="text" placeholder="2233-1120" id="contact" class="form-control" required="required">
-                                        </div>
-                                        <h3>Telephone</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
-                                            <input type="text" placeholder="+44 (8-10) ___-___-__-__" id="contact_mobile_phone" class="form-control">
-                                        </div>
+<?=
+    $form->field($customer, 'customer', ['template' => inputTemplate('fa-male')])
+        ->textInput(['placeholder' => 'Steve Defries'])
+?>
+<?=
+    $form->field($customer, 'contact', ['template' => inputTemplate('fa-id-card-o')])
+        ->textInput()
+?>
+<?=
+    $form->field($customer, 'telephone', ['template' => inputTemplate('fa-phone')])
+        ->textInput(['placeholder' => '+4 66 558-999-00'])
+?>
 
                                     </div>
                                     <div class="col-md-6 address-container">
-                                        <h3>Address</h3>
-                                        <textarea id="customer_address" class="form-control" placeholder="London, Main st. 8-45"></textarea>
+<?=
+    $form->field($customer, 'address', ['template' => '<h3>{label}</h3>{input}'])
+        ->textarea()
+?>
                                     </div>
                                 </div>
                             </fieldset>
@@ -168,25 +183,22 @@ $dropdown_template = '<h3>{label}</h3>' . $dropdown_template_no_title;
                             <fieldset>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <h3>Job Title</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
-                                            <input type="text" placeholder="Director of the everything" id="contact_job_title" class="form-control">
-                                        </div>
+<?=
+    $form->field($customer, 'job_title', ['template' => inputTemplate('fa-briefcase')])
+        ->textInput(['placeholder' => 'Director of Everything'])
+?>
                                     </div>
                                     <div class="col-md-4">
-                                        <h3>Email Address</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
-                                            <input type="text" placeholder="steve@customercare.com" id="email_address" class="form-control">
-                                        </div>
+<?=
+    $form->field($customer, 'email', ['template' => inputTemplate('fa-envelope-o')])
+        ->textInput(['placeholder' => 'steve@customercare.com'])
+?>
                                     </div>
                                     <div class="col-md-4">
-                                        <h3>Mobile</h3>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                                            <input type="text" placeholder="+44 (8-10) ___-___-__-__" id="telephone" class="form-control">
-                                        </div>
+<?=
+    $form->field($customer, 'mobile', ['template' => inputTemplate('fa-mobile')])
+        ->textInput(['placeholder' => '+4 66 558-999-00'])
+?>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -203,18 +215,10 @@ $dropdown_template = '<h3>{label}</h3>' . $dropdown_template_no_title;
 ?>
                                     </div>
                                     <div class="col-md-4 form-group">
-                                        <h3>Account Number</h3>
-                                        <div class="input-group">
-                                            <input type="text" id="account_number" class="form-control" required="required">
-                                            <div class="input-group-btn">
-                                                <button type="button" class="btn btn-default btn-generate">
-                                                    <i class="fa fa-magic"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-default btn-copy">
-                                                    <i class="fa fa-clipboard"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+<?=
+    $form->field($customer, 'account_number', ['template' => inputTemplate('fa-id-badge')])
+        ->textInput()
+?>
                                     </div>
                                 </div>
                             </fieldset>
