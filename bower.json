@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "select2": "^4.0.3"
+    "select2": "^4.0.3",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
   }
 }

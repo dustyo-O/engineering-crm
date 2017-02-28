@@ -20,9 +20,11 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\assets\Select2Asset;
 use app\assets\ToastAsset;
+use app\assets\DateTimePickerAsset;
 
 Select2Asset::register($this);
 ToastAsset::register($this);
+DateTimePickerAsset::register($this);
 
 $model_add_ajax_url = Url::to(['ajax/model-add']);
 
@@ -108,6 +110,8 @@ $(document).on('click','.btn-popover', function () {
         $(this).parent().parent().popover('hide');        
     });
 });
+
+$('#customergeneral-start_date').datetimepicker();
 JS
 );
 $dropdown_template_no_title = '
@@ -247,49 +251,48 @@ HTML;
                         <fieldset>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3>Client</h3>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-male"></i></span>
-                                        <input type="text" placeholder="Steve Defries" id="client" class="form-control" required="required">
-                                    </div>
-                                    <h3>Contact</h3>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
-                                        <input type="text" placeholder="2233-1120" id="contact" class="form-control" required="required">
-                                    </div>
-                                    <h3>Telephone</h3>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-mobile-phone"></i></span>
-                                        <input type="text" placeholder="+44 (8-10) ___-___-__-__" id="contact_mobile_phone" class="form-control">
-                                    </div>
+<?=
+    $form->field($customer_quote, 'client', ['template' => inputTemplate('fa-male')])
+        ->textInput()
+?>
+<?=
+    $form->field($customer_quote, 'contact', ['template' => inputTemplate('fa-address-card-o')])
+        ->textInput()
+?>
+<?=
+    $form->field($customer_quote, 'telephone', ['template' => inputTemplate('fa-phone')])
+        ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
+?>
                                 </div>
                                 <div class="col-md-6 address-container">
-                                    <h3>Address</h3>
-                                    <textarea id="client_address" class="form-control" placeholder="London, Main st. 8-45"></textarea>
+<?=
+    $form->field($customer_quote, 'address', ['template' => '<h3>{label}</h3>{input}'])
+        ->textarea()
+?>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3>Quote number</h3>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-slack"></i></span>
-                                        <input type="text" placeholder="DF100433GG00" id="quote_cost" class="form-control" required="required">
-                                    </div>
-                                    <h3>Quote amount</h3>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                                        <input type="text" placeholder="4353" id="quote_amount" class="form-control calendar" required="required">
-                                    </div>
+<?=
+    $form->field($customer_quote, 'quote_number', ['template' => inputTemplate('fa-hashtag')])
+        ->textInput()
+?>
+<?=
+    $form->field($customer_quote, 'quote_amount', ['template' => inputTemplate('fa-euro')])
+        ->textInput()
+?>
 <?=
     $form->field($customer_quote, 'quote_status_id', ['template' => $dropdown_template])
         ->dropDownList(ArrayHelper::map($quote_statuses, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
                                 </div>
                                 <div class="col-md-6 address-container">
-                                    <h3>Notes</h3>
-                                    <textarea id="notes" class="form-control"></textarea>
+<?=
+    $form->field($customer_quote, 'notes', ['template' => '<h3>{label}</h3>{input}'])
+        ->textarea()
+?>
                                 </div>
                             </div>
                         </fieldset>
@@ -316,50 +319,41 @@ HTML;
                     <div class="widget-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <h3>Key Holder 1</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    <input type="text" placeholder="John Snow" id="key_holder_1_name" class="form-control" required="required">
-                                </div>
+<?=
+    $form->field($customer_general, 'key_holder_1', ['template' => inputTemplate('fa-key')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Email</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
-                                    <input type="text" placeholder="key@holder.com" id="key_holder_1_email" class="form-control" required="required">
-                                </div>
-
+<?=
+    $form->field($customer_general, 'key_holder_1_email', ['template' => inputTemplate('fa-envelope')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Key Holder 1 Contact Number</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-                                    <input type="text" placeholder="+44 (8-10) ___-___-__-__" id="key_holder_1_contact_number" class="form-control" required="required">
-                                </div>
-
+<?=
+    $form->field($customer_general, 'key_holder_1_phone', ['template' => inputTemplate('fa-phone-square')])
+        ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
+?>
                             </div>
 
                             <div class="col-md-4">
-                                <h3>Key Holder 2 Name</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    <input type="text" placeholder="Olivia Wilde" id="key_holder_2_name" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'key_holder_2', ['template' => inputTemplate('fa-key')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Email</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
-                                    <input type="text" placeholder="key@holder.com" id="key_holder_2_email" class="form-control" required="required">
-                                </div>
-
+<?=
+    $form->field($customer_general, 'key_holder_2_email', ['template' => inputTemplate('fa-envelope')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Key Holder 2 Contact Number</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-                                    <input type="text" placeholder="+44 (8-10) ___-___-__-__" id="key_holder_2_contact_number" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'key_holder_2_phone', ['template' => inputTemplate('fa-phone-square')])
+        ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
+?>
                             </div>
                             <div class="col-md-4">
 <?=
@@ -368,18 +362,16 @@ HTML;
 ?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Contract Start Date</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-calendar-check-o"></i></span>
-                                    <input type="text" placeholder="23.11.2016" id="contract_start_date" class="form-control calendar" required="required">
-                                </div>
+<?=
+    $form->field($customer_general, 'start_date', ['template' => inputTemplate('fa-calendar-o')])
+        ->textInput(['placeholder' => '23.11.2017'])
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Number of Visits</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-wrench"></i></span>
-                                    <input type="text" placeholder="" id="number_visits" class="form-control" required="required">
-                                </div>
+<?=
+    $form->field($customer_general, 'number_of_visits', ['template' => inputTemplate('fa-medkit')])
+        ->textInput()
+?>
                             </div>
                         </div>
                         <div class="row">
@@ -388,49 +380,47 @@ HTML;
     $form->field($customer_general, 'signalling_type_id', ['template' => $dropdown_template])
         ->dropDownList(ArrayHelper::map($general_signalling_types, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
-
                             </div>
                             <div class="col-md-4">
-                                <h3>URN</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-slack"></i></span>
-                                    <input type="text" placeholder="URN" id="urn" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'urn', ['template' => inputTemplate('fa-tag')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>NSi number</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-slack"></i></span>
-                                    <input type="text" placeholder="NSi number" id="nsi_number" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'nsi_number', ['template' => inputTemplate('fa-university')])
+        ->textInput()
+?>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4">
-                                <h3>Maintenance Cost</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                                    <input type="text" placeholder="5000" id="Maintenance_cost" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'maintenance_cost', ['template' => inputTemplate('fa-wrench')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
-                                <h3>Monitoring Cost</h3>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                                    <input type="text" placeholder="6790" id="urn" class="form-control">
-                                </div>
+<?=
+    $form->field($customer_general, 'monitoring_cost', ['template' => inputTemplate('fa-area-chart')])
+        ->textInput()
+?>
                             </div>
                             <div class="col-md-4">
 <?=
     $form->field($customer_general, 'signalling_type_id', ['template' => $dropdown_template_no_title])
         ->dropDownList(ArrayHelper::map($general_signalling_types, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
-
+<?=
+$form->field($customer_general, 'other_costs', ['template' => '
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-euro"></i></span>
-                                    <input type="text" placeholder="1200" id="other_costs" class="form-control">
+                                    <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                    {input}
                                 </div>
+'])->textInput()
+?>
                             </div>
                         </div>
                         <fieldset>
@@ -469,8 +459,10 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
                                     </div>
                                 </div>
                                 <div class="col-md-6 address-container">
-                                    <h3>Notes</h3>
-                                    <textarea id="notes" class="form-control"></textarea>
+<?=
+    $form->field($customer_general, 'notes', ['template' => '<h3>{label}</h3>{input}'])
+        ->textarea()
+?>
                                 </div>
                             </div>
                         </fieldset>

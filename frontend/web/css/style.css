@@ -69,3 +69,12 @@ select.form-control {
 .select2-container .select2-choice .select2-arrow b::before, .select2-selection__arrow b::before {
     content: '';
 }
+
+.address-container > .form-group {
+    height: 100%;
+    overflow-y: visible;
+}
+
+.address-container textarea {
+    resize: none;
+}

@@ -34,4 +34,4 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 
-.phplint-cache
+/.phplint-cache
