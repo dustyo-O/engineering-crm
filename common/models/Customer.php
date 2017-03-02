@@ -106,4 +106,12 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(CustomerSystemType::className(), ['id' => 'system_type_id']);
     }
+
+    public function afterDelete()
+    {
+        $this->quote->delete();
+        $this->general->delete();
+
+        return parent::afterDelete();
+    }
 }

@@ -4,13 +4,49 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
+use app\assets\ToastAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+ToastAsset::register($this);
+
+if ($success = Yii::$app->session->getFlash('success'))
+{
+    $this->registerJs(<<<JS
+    const SUCCESS_COLOR = '#71843f';
+
+    $.toast({
+        heading: 'Success',
+        text: '{$success}',
+        icon: 'success',
+        loader: false,
+        loaderBg: SUCCESS_COLOR,
+        position: 'top-right'
+    });
+JS
+    );
+}
+if ($error = Yii::$app->session->getFlash('error'))
+{
+    $this->registerJs(<<<JS
+    const ERROR_COLOR = '#a90329';
+
+    $.toast({
+        heading: 'Error',
+        text: '{$error}',
+        icon: 'error',
+        loader: false,
+        loaderBg: ERROR_COLOR,
+        position: 'top-right'
+    });
+JS
+    );
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -131,15 +167,7 @@ AppAsset::register($this);
     <nav>
         <ul>
             <li>
-                <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
-                <ul>
-                    <li>
-                        <a href="/index.html" title="Dashboard"><span class="menu-item-parent">Analytics Dashboard</span></a>
-                    </li>
-                    <li class="">
-                        <a href="/dashboard-social.html" title="Dashboard"><span class="menu-item-parent">Social Wall</span></a>
-                    </li>
-                </ul>
+                <a href="<?= Url::to(['customer/list']) ?>" title="Customers"><i class="fa fa-lg fa-fw fa-male"></i> Customers</a>
             </li>
         </ul>
     </nav>

@@ -23,7 +23,6 @@ use app\assets\ToastAsset;
 use app\assets\DateTimePickerAsset;
 
 Select2Asset::register($this);
-ToastAsset::register($this);
 DateTimePickerAsset::register($this);
 
 $model_add_ajax_url = Url::to(['ajax/model-add']);
@@ -111,7 +110,9 @@ $(document).on('click','.btn-popover', function () {
     });
 });
 
-$('#customergeneral-start_date').datetimepicker();
+$('#customergeneral-start_date').datetimepicker({
+    format: 'DD.MM.YYYY'
+});
 JS
 );
 $dropdown_template_no_title = '
@@ -145,6 +146,12 @@ HTML;
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <?php
         $form = ActiveForm::begin(['options' => ['method' => 'post']]);
+
+        if ($customer->id) {
+            echo $form->field($customer, 'id')->hiddenInput()->label(false);
+            echo $form->field($customer_quote, 'id')->hiddenInput()->label(false);
+            echo $form->field($customer_general, 'id')->hiddenInput()->label(false);
+        }
         ?>
 
             <div class="jarviswidget">
@@ -410,8 +417,8 @@ HTML;
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'signalling_type_id', ['template' => $dropdown_template_no_title])
-        ->dropDownList(ArrayHelper::map($general_signalling_types, 'id', 'title'), ['prompt' => 'Choose one...']);
+    $form->field($customer_general, 'other_label_id', ['template' => $dropdown_template_no_title])
+        ->dropDownList(ArrayHelper::map($general_other_labels, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
 <?=
 $form->field($customer_general, 'other_costs', ['template' => '
@@ -475,7 +482,7 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button><button class="btn btn-default btn-lg" type="reset">Cancel</button><button class="btn btn-danger pull-right delete-btn"><i class="fa fa-trash-o"></i> Delete</button>
+            <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button><a href="<?= Url::to(['customer/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a><a href="<?= Url::to(['customer/delete', 'id' => $customer->id]) ?>" class="btn btn-danger pull-right delete-btn"><i class="fa fa-trash-o"></i> Delete</a>
         <?php
             ActiveForm::end();
         ?>

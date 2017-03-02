@@ -16,7 +16,9 @@ use common\models\GeneralOtherLabel;
 use common\models\GeneralSignallingType;
 use common\models\QuoteStatus;
 use Yii;
+use yii\base\ErrorException;
 use yii\base\InvalidParamException;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -74,21 +76,75 @@ class CustomerController extends Controller
         ];
     }
 
+    public function actionCreate()
+    {
+        return $this->actionEdit();
+    }
+
     /**
      * Displays create form for customer.
      *
      * @return mixed
      */
-    public function actionCreate()
+    public function actionEdit($id = null)
     {
-        $customer = new Customer();
+        if ($id)
+        {
+            $customer = Customer::findOne($id);
+            $customer_quote = CustomerQuote::findOne($customer->quote_id);
+            $customer_general = CustomerGeneral::findOne($customer->general_id);
+
+            $customer_general->start_date = (new \DateTime($customer_general->start_date))->format('d.m.Y');
+        }
+        else
+        {
+            $customer = new Customer();
+            $customer_quote = new CustomerQuote();
+            $customer_general = new CustomerGeneral();
+
+        }
+
+        $customer_general_info = Yii::$app->request->post("CustomerGeneral");
+        $customer_quote_info = Yii::$app->request->post("CustomerQuote");
+        $customer_info = Yii::$app->request->post("Customer");
+
+        if ($customer_general_info && $customer_quote_info && $customer_info)
+        {
+            $customer_general->load($customer_general_info, '');
+            $customer_general->start_date = (new \DateTime($customer_general->start_date))->format('Y-m-d H:i:s');
+            if ($customer_general->save())
+            {
+                $customer_quote->load($customer_quote_info, '');
+                if ($customer_quote->save())
+                {
+                    $customer->load($customer_info, '');
+                    $customer->quote_id = $customer_quote->id;
+                    $customer->general_id = $customer_general->id;
+
+                    if ($customer->save())
+                    {
+                        Yii::$app->session->setFlash('success', 'Customer saved succesfully');
+                        return $this->redirect(Url::to(['customer/list']));
+                    }
+                    else
+                    {
+                        $customer_quote->delete();
+                        $customer_general->delete();
+                    }
+                }
+                else
+                {
+                    $customer_general->delete();
+                }
+            }
+            Yii::$app->session->setFlash('error', 'Error, customer was not saved');
+        }
+
         $customer_system_types = CustomerSystemType::find()->all();
         $customer_statuses = CustomerStatus::find()->all();
 
-        $customer_quote = new CustomerQuote();
         $quote_statuses = QuoteStatus::find()->all();
 
-        $customer_general = new CustomerGeneral();
         $general_maintenance_contracts = GeneralMaintenanceContract::find()->all();
         $general_signalling_types = GeneralSignallingType::find()->all();
         $general_other_labels = GeneralOtherLabel::find()->all();
@@ -98,7 +154,7 @@ class CustomerController extends Controller
         $general_misc2 = GeneralMisc2::find()->all();
         $general_misc2_labels = GeneralMisc2Label::find()->all();
 
-        return $this->render('create', [
+        return $this->render('form', [
             'customer' => $customer,
             'customer_system_types' => $customer_system_types,
             'customer_statuses' => $customer_statuses,
@@ -115,6 +171,38 @@ class CustomerController extends Controller
             'general_misc1_labels' => $general_misc1_labels,
             'general_misc2' => $general_misc2,
             'general_misc2_labels' => $general_misc2_labels,
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $customer = Customer::findOne($id);
+
+        if(!$customer)
+        {
+            throw new ErrorException('Customer does not exists');
+        }
+        else
+        {
+            if ($customer->delete())
+            {
+                Yii::$app->session->setFlash('success', 'Customer deleted succesfully');
+                return $this->redirect(Url::to(['customer/list']));
+            }
+            else
+            {
+                Yii::$app->session->setFlash('error', 'Error, customer was not deleted');
+                return $this->redirect(Url::to(['customer/edit', 'id' => $customer->id]));
+            }
+        }
+    }
+
+    public function actionList()
+    {
+        $customers = Customer::find()->with('quote')->with('general')->with('customerStatus')->all();
+
+        return $this->render('list', [
+            'customers' => $customers
         ]);
     }
 
