@@ -40,7 +40,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "php init --env=Development --overwrite=n; bower install"
+            "php init --env=Development --overwrite=n; bower install --allow-root"
         ],
         "post-update-cmd": [
             "bower install"
