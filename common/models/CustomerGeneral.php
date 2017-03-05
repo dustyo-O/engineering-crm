@@ -176,4 +176,18 @@ class CustomerGeneral extends \yii\db\ActiveRecord
     {
         return $this->hasOne(GeneralSignallingType::className(), ['id' => 'signalling_type_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocuments()
+    {
+        return $this->hasMany(Documents::className(), ['id' => 'document_id'])->viaTable('{{%general_documents}}', ['general_id' => 'id']);
+    }
+
+    public function beforeDelete()
+    {
+        GeneralDocuments::deleteAll(['general_id' => $this->id]);
+        return parent::beforeDelete();
+    }
 }

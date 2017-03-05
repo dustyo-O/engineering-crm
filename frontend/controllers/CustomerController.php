@@ -7,6 +7,7 @@ use common\models\CustomerQuote;
 use common\models\CustomerStatus;
 use common\models\CustomerSystemType;
 use common\models\GeneralAccountManager;
+use common\models\GeneralDocuments;
 use common\models\GeneralMaintenanceContract;
 use common\models\GeneralMisc1;
 use common\models\GeneralMisc1Label;
@@ -14,6 +15,7 @@ use common\models\GeneralMisc2;
 use common\models\GeneralMisc2Label;
 use common\models\GeneralOtherLabel;
 use common\models\GeneralSignallingType;
+use common\models\QuoteDocuments;
 use common\models\QuoteStatus;
 use Yii;
 use yii\base\ErrorException;
@@ -91,7 +93,7 @@ class CustomerController extends Controller
         if ($id)
         {
             $customer = Customer::findOne($id);
-            $customer_quote = CustomerQuote::findOne($customer->quote_id);
+            $customer_quote = CustomerQuote::find()->where(['id' => $customer->quote_id])->with('documents')->one();
             $customer_general = CustomerGeneral::findOne($customer->general_id);
 
             $customer_general->start_date = (new \DateTime($customer_general->start_date))->format('d.m.Y');
@@ -123,6 +125,38 @@ class CustomerController extends Controller
 
                     if ($customer->save())
                     {
+                        $documents = Yii::$app->request->post("QuoteDocuments");
+
+                        if ($documents)
+                        {
+                            foreach ($documents as $document)
+                            {
+                                $quote_document = new QuoteDocuments();
+
+                                $quote_document->document_id = $document['id'];
+                                $quote_document->quote_id = $customer_quote->id;
+
+                                $quote_document->save();
+                            }
+                        }
+
+                        $documents = Yii::$app->request->post("GeneralDocuments");
+
+                        if ($documents)
+                        {
+                            foreach ($documents as $document)
+                            {
+                                $general_document = new GeneralDocuments();
+
+                                $general_document->document_id = $document['id'];
+                                $general_document->general_id = $customer_general->id;
+
+                                $general_document->save();
+                            }
+
+                        }
+
+
                         Yii::$app->session->setFlash('success', 'Customer saved succesfully');
                         return $this->redirect(Url::to(['customer/list']));
                     }

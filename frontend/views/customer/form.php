@@ -21,15 +21,50 @@ use yii\helpers\ArrayHelper;
 use app\assets\Select2Asset;
 use app\assets\ToastAsset;
 use app\assets\DateTimePickerAsset;
+use app\assets\DropzoneAsset;
 
 Select2Asset::register($this);
 DateTimePickerAsset::register($this);
+DropzoneAsset::register($this);
 
 $model_add_ajax_url = Url::to(['ajax/model-add']);
+$upload_documents_ajax_url = Url::to(['ajax/document-upload']);
+$document_download_url = Url::to(['documents/download', 'id' => '']);
+
+$_csrf = Yii::$app->request->getCsrfToken();
+
+$quote_documents = $customer_quote->documents;
+$quote_dropzone_data = [];
+foreach ($quote_documents as $quote_document)
+{
+    $quote_dropzone_data[] = [
+        'id' => $quote_document->id,
+        'name' => $quote_document->filename,
+        'size' => $quote_document->getFileSize() // TODO set real size
+    ];
+}
+
+$quote_dropzone_json = json_encode($quote_dropzone_data);
+
+$general_documents = $customer_general->documents;
+$general_dropzone_data = [];
+foreach ($general_documents as $general_document)
+{
+    $general_dropzone_data[] = [
+        'id' => $general_document->id,
+        'name' => $general_document->filename,
+        'size' => $general_document->getFileSize() // TODO set real size
+    ];
+}
+
+$general_dropzone_json = json_encode($general_dropzone_data);
 
 $this->registerJs(<<<JS
 const SUCCESS_COLOR = '#71843f';
 const ERROR_COLOR = '#a90329';
+
+var quoteDocuments = {$quote_dropzone_json};
+var generalDocuments = {$general_dropzone_json};
 
 $('article select').select2({
     minimumResultsForSearch: Infinity
@@ -113,8 +148,65 @@ $(document).on('click','.btn-popover', function () {
 $('#customergeneral-start_date').datetimepicker({
     format: 'DD.MM.YYYY'
 });
+
+Dropzone.autoDiscover = false;
+
+var quoteDropzone = new Dropzone("div#quote_documents", {
+    url: '{$upload_documents_ajax_url}',
+    paramName: 'Documents[file]',
+    sending: function(file, xhr, formData) {
+        formData.append('_csrf-frontend', '$_csrf');
+    },
+    success: function(file, response) {
+        if (response) {
+            $('.customer-form').append(
+                $('<input/>', { type: 'hidden', name: 'QuoteDocuments[][id]', value: response.id })
+            );            
+        }
+        
+        file.previewElement.onclick = function() {
+            $('.download-file').prop('src', '$document_download_url' + (file.id || response.id));
+        }
+    }
+});
+
+quoteDocuments.forEach(
+    function(document) {
+        quoteDropzone.emit("addedfile", document);
+        quoteDropzone.emit("success", document); 
+        quoteDropzone.emit("complete", document); 
+    }    
+);
+
+var generalDropzone = new Dropzone("div#general_documents", {
+    url: '{$upload_documents_ajax_url}',
+    paramName: 'Documents[file]',
+    sending: function(file, xhr, formData) {
+        formData.append('_csrf-frontend', '$_csrf');
+    },
+    success: function(file, response) {
+        if (response) {
+            $('.customer-form').append(
+                $('<input/>', { type: 'hidden', name: 'GeneralDocuments[][id]', value: response.id })
+            );            
+        }
+        
+        file.previewElement.onclick = function() {
+            $('.download-file').prop('src', '$document_download_url' + (file.id || response.id));
+        }
+    }
+});
+
+generalDocuments.forEach(
+    function(document) {
+        generalDropzone.emit("addedfile", document);
+        generalDropzone.emit("success", document); 
+        generalDropzone.emit("complete", document); 
+    }    
+);
 JS
 );
+
 $dropdown_template_no_title = '
     <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button">
     <i class="fa fa-plus"></i></button>
@@ -145,7 +237,7 @@ HTML;
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <?php
-        $form = ActiveForm::begin(['options' => ['method' => 'post']]);
+        $form = ActiveForm::begin(['options' => ['method' => 'post', 'class' => 'customer-form']]);
 
         if ($customer->id) {
             echo $form->field($customer, 'id')->hiddenInput()->label(false);
@@ -306,7 +398,7 @@ HTML;
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>Quote Documents</h3>
-                                <div class="dropzone" id="mydropzone"></div>
+                                <div class="dropzone" id="quote_documents"></div>
                             </div>
                         </div>
                     </div>
@@ -476,7 +568,7 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>Service & Maintenance Documents</h3>
-                                <div class="dropzone" id="mydropzone"></div>
+                                <div class="dropzone" id="general_documents"></div>
                             </div>
                         </div>
                     </div>
@@ -491,5 +583,5 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
 
 </div>
 
-
+<iframe style="display: none" class="download-file"></iframe>
 <!-- end row -->

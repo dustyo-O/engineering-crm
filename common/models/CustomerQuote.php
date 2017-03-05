@@ -19,6 +19,7 @@ use Yii;
  *
  * @property Customer[] $customers
  * @property QuoteStatus $quoteStatus
+ * @property Documents[] $documents
  */
 class CustomerQuote extends \yii\db\ActiveRecord
 {
@@ -76,5 +77,19 @@ class CustomerQuote extends \yii\db\ActiveRecord
     public function getQuoteStatus()
     {
         return $this->hasOne(QuoteStatus::className(), ['id' => 'quote_status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocuments()
+    {
+        return $this->hasMany(Documents::className(), ['id' => 'document_id'])->viaTable('{{%quote_documents}}', ['quote_id' => 'id']);
+    }
+
+    public function beforeDelete()
+    {
+        QuoteDocuments::deleteAll(['quote_id' => $this->id]);
+        return parent::beforeDelete();
     }
 }
