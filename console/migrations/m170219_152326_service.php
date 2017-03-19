@@ -19,17 +19,14 @@ class m170219_152326_service extends Migration
             'telephone' => $this->string()->notNull(),
             'address' => $this->text()->notNull(),
             'call_type_id' => $this->integer()->notNull(),
-            'job_title' => $this->string()->notNull(),
-            'email' => $this->string()->notNull(),
-            'mobile' => $this->string()->notNull(),
-            'customer_status_id' => $this->integer()->notNull(),
-            'account_number' => $this->string()->notNull()
+            'date' => $this->dateTime()->notNull(),
+            'time' => $this->integer()->notNull(),
+            'problem_reported' => $this->string()->notNull()
         ], $tableOptions);
 
         // Call Type
         $this->createIndex('SERVICE_CALL_TYPE_INDEX', '{{%service}}', 'call_type_id');
-        $this->addForeignKey('SERVICE_CALL_TYPE',
-            '{{%service}}', 'call_type_id', '{{%service_call_type}}', 'id');
+        $this->addForeignKey('SERVICE_CALL_TYPE', '{{%service}}', 'call_type_id', '{{%service_call_type}}', 'id');
 
     }
 

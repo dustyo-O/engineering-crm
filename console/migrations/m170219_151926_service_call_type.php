@@ -4,11 +4,6 @@ use yii\db\Migration;
 
 class m170219_151926_service_call_type extends Migration
 {
-
-
-
-
-
     public function safeUp()
     {
         $tableOptions = null;
