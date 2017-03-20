@@ -40,7 +40,7 @@ foreach ($quote_documents as $quote_document)
     $quote_dropzone_data[] = [
         'id' => $quote_document->id,
         'name' => $quote_document->filename,
-        'size' => $quote_document->getFileSize() // TODO set real size
+        'size' => $quote_document->getFileSize()
     ];
 }
 
@@ -50,100 +50,22 @@ $general_documents = $customer_general->documents;
 $general_dropzone_data = [];
 foreach ($general_documents as $general_document)
 {
+    /* @var $general_document \common\models\Documents */
     $general_dropzone_data[] = [
         'id' => $general_document->id,
         'name' => $general_document->filename,
-        'size' => $general_document->getFileSize() // TODO set real size
+        'size' => $general_document->getFileSize()
     ];
 }
 
 $general_dropzone_json = json_encode($general_dropzone_data);
 
-$this->registerJs(<<<JS
-const SUCCESS_COLOR = '#71843f';
-const ERROR_COLOR = '#a90329';
+$this->registerJsFile('/js/input-plugins-init.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/dropzone-documents-init.js', ['depends' => ['yii\web\JqueryAsset']]);
 
+$this->registerJs(<<<JS
 var quoteDocuments = {$quote_dropzone_json};
 var generalDocuments = {$general_dropzone_json};
-
-$('article select').select2({
-    minimumResultsForSearch: Infinity
-});
-
-$(".btn-append").popover(
-    {
-        'title': 'Add new element',
-        'html': true,
-        'content': '<label class="input"><input type="text"/></label><button class="btn btn-default btn-block btn-popover" type="button"><i class="fa fa-check"></i> Add</button>'
-    }
-);
-
-$(document).on('click','.btn-popover', function () {
-    var select = $(this).parent().parent().next().find("select");
-    var value = $(this).prev().find("input").val();
-
-    var selectName = select.prop('name');
-    
-    var baseModel = selectName.substring(0, selectName.indexOf('[')).toLowerCase();
-    var field = selectName.substring(selectName.indexOf('[') + 1, selectName.indexOf('_id]'));
-    
-    if (baseModel !== 'customer') baseModel = baseModel.replace('customer', '');
-    
-    // field name can start from base model name, but related model won't start with two same words
-    // example: Customer[customer_status_id] => customer_status => CustomerStatus (not CustomerCustomerStatus)
-    var modelName = (baseModel !== field.split('_')[0] ? baseModel + '_' : '').concat(field);
-    
-    // disable button
-    $(this).prop('disabled', 'disabled');
-    $('i', $(this)).removeClass('fa-check');
-    $('i', $(this)).addClass('fa-spinner');
-    $('i', $(this)).addClass('fa-pulse');
-    
-    $.ajax({
-        url: '{$model_add_ajax_url}',
-        method: 'post',
-        data: {
-            name: modelName,
-            title: value
-        },
-        type: 'json',
-        context: this
-    })
-    .done(function(response) {
-        select.append(
-            $('<option/>', { value: response.id, text: value })    
-        );
-        select.trigger('change');
-        
-        $.toast({
-            heading: 'Element Added',
-            text: 'New element added successfully - check the list',
-            icon: 'info',
-            loader: false,
-            loaderBg: SUCCESS_COLOR,
-            position: 'top-right'
-        });
-    })
-    .fail(function() {
-        $.toast({
-            heading: 'Error',
-            text: 'Element was not added. Try to repeat your request or refresh the page',
-            icon: 'error',
-            loader: false,
-            loaderBg: ERROR_COLOR,
-            position: 'top-right'
-        });            
-    })
-    .complete(function() {
-        // enable button
-        $(this).prop('disabled', false);
-        $('i', $(this)).addClass('fa-check');
-        $('i', $(this)).removeClass('fa-spinner');
-        $('i', $(this)).removeClass('fa-pulse');
-
-        $(this).parent().parent().popover('hide');        
-    });
-});
 
 $('#customergeneral-start_date').datetimepicker({
     format: 'DD.MM.YYYY'
@@ -151,86 +73,13 @@ $('#customergeneral-start_date').datetimepicker({
 
 Dropzone.autoDiscover = false;
 
-var quoteDropzone = new Dropzone("div#quote_documents", {
-    url: '{$upload_documents_ajax_url}',
-    paramName: 'Documents[file]',
-    sending: function(file, xhr, formData) {
-        formData.append('_csrf-frontend', '$_csrf');
-    },
-    success: function(file, response) {
-        if (response) {
-            $('.customer-form').append(
-                $('<input/>', { type: 'hidden', name: 'QuoteDocuments[][id]', value: response.id })
-            );            
-        }
-        
-        file.previewElement.onclick = function() {
-            $('.download-file').prop('src', '$document_download_url' + (file.id || response.id));
-        }
-    }
-});
-
-quoteDocuments.forEach(
-    function(document) {
-        quoteDropzone.emit("addedfile", document);
-        quoteDropzone.emit("success", document); 
-        quoteDropzone.emit("complete", document); 
-    }    
-);
-
-var generalDropzone = new Dropzone("div#general_documents", {
-    url: '{$upload_documents_ajax_url}',
-    paramName: 'Documents[file]',
-    sending: function(file, xhr, formData) {
-        formData.append('_csrf-frontend', '$_csrf');
-    },
-    success: function(file, response) {
-        if (response) {
-            $('.customer-form').append(
-                $('<input/>', { type: 'hidden', name: 'GeneralDocuments[][id]', value: response.id })
-            );            
-        }
-        
-        file.previewElement.onclick = function() {
-            $('.download-file').prop('src', '$document_download_url' + (file.id || response.id));
-        }
-    }
-});
-
-generalDocuments.forEach(
-    function(document) {
-        generalDropzone.emit("addedfile", document);
-        generalDropzone.emit("success", document); 
-        generalDropzone.emit("complete", document); 
-    }    
-);
+initDocumentsDropzone('quote', quoteDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
+initDocumentsDropzone('general', generalDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
 JS
 );
 
-$dropdown_template_no_title = '
-    <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button">
-    <i class="fa fa-plus"></i></button>
-    <label class="select with-plus-btn title">
-        {input}
-    </label>';
-
-$dropdown_template = '<h3>{label}</h3>
-    <button class="btn btn-success btn-circle btn-append" data-placement="left" type="button">
-    <i class="fa fa-plus"></i></button>
-    <label class="select with-plus-btn">
-        {input}
-    </label>';
-
-function inputTemplate($icon)
-{
-    return <<<HTML
-<h3>{label}</h3>
-<div class="input-group">
-    <span class="input-group-addon"><i class="fa {$icon}"></i></span>
-    {input}
-</div>
-HTML;
-}
+$dropdown_template = $this->render('/construct/dropdown', []);
+$dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
 ?>
 <!-- row -->
 <div class="row">
@@ -260,15 +109,15 @@ HTML;
                                 <div class="row">
                                     <div class="col-md-6">
 <?=
-    $form->field($customer, 'customer', ['template' => inputTemplate('fa-male')])
+    $form->field($customer, 'customer', ['template' => $this->render('/construct/input', ['icon' => 'fa-male'])])
         ->textInput(['placeholder' => 'Steve Defries'])
 ?>
 <?=
-    $form->field($customer, 'contact', ['template' => inputTemplate('fa-id-card-o')])
+    $form->field($customer, 'contact', ['template' => $this->render('/construct/input', ['icon' => 'fa-id-card-o'])])
         ->textInput()
 ?>
 <?=
-    $form->field($customer, 'telephone', ['template' => inputTemplate('fa-phone')])
+    $form->field($customer, 'telephone', ['template' => $this->render('/construct/input', [ 'icon' => 'fa-phone'])])
         ->textInput(['placeholder' => '+4 66 558-999-00'])
 ?>
 
@@ -287,19 +136,19 @@ HTML;
                                 <div class="row">
                                     <div class="col-md-4">
 <?=
-    $form->field($customer, 'job_title', ['template' => inputTemplate('fa-briefcase')])
+    $form->field($customer, 'job_title', ['template' => $this->render('/construct/input', ['icon' => 'fa-briefcase'])])
         ->textInput(['placeholder' => 'Director of Everything'])
 ?>
                                     </div>
                                     <div class="col-md-4">
 <?=
-    $form->field($customer, 'email', ['template' => inputTemplate('fa-envelope-o')])
+    $form->field($customer, 'email', ['template' => $this->render('/construct/input', ['icon' => 'fa-envelope-o'])])
         ->textInput(['placeholder' => 'steve@customercare.com'])
 ?>
                                     </div>
                                     <div class="col-md-4">
 <?=
-    $form->field($customer, 'mobile', ['template' => inputTemplate('fa-mobile')])
+    $form->field($customer, 'mobile', ['template' => $this->render('/construct/input', ['icon' => 'fa-mobile'])])
         ->textInput(['placeholder' => '+4 66 558-999-00'])
 ?>
                                     </div>
@@ -319,7 +168,7 @@ HTML;
                                     </div>
                                     <div class="col-md-4 form-group">
 <?=
-    $form->field($customer, 'account_number', ['template' => inputTemplate('fa-id-badge')])
+    $form->field($customer, 'account_number', ['template' => $this->render('/construct/input', ['icon' => 'fa-id-badge'])])
         ->textInput()
 ?>
                                     </div>
@@ -351,15 +200,17 @@ HTML;
                             <div class="row">
                                 <div class="col-md-6">
 <?=
-    $form->field($customer_quote, 'client', ['template' => inputTemplate('fa-male')])
+    $form->field($customer_quote, 'client', ['template' => $this->render('/construct/input', ['icon' => 'fa-male'])])
         ->textInput()
 ?>
 <?=
-    $form->field($customer_quote, 'contact', ['template' => inputTemplate('fa-address-card-o')])
+    $form->field($customer_quote, 'contact',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-address-card-o'])])
         ->textInput()
 ?>
 <?=
-    $form->field($customer_quote, 'telephone', ['template' => inputTemplate('fa-phone')])
+    $form->field($customer_quote, 'telephone',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-phone'])])
         ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
 ?>
                                 </div>
@@ -375,11 +226,13 @@ HTML;
                             <div class="row">
                                 <div class="col-md-6">
 <?=
-    $form->field($customer_quote, 'quote_number', ['template' => inputTemplate('fa-hashtag')])
+    $form->field($customer_quote, 'quote_number',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-hashtag'])])
         ->textInput()
 ?>
 <?=
-    $form->field($customer_quote, 'quote_amount', ['template' => inputTemplate('fa-euro')])
+    $form->field($customer_quote, 'quote_amount',
+        ['template' => $this->render('/construct/input', [ 'icon' => 'fa-euro'])])
         ->textInput()
 ?>
 <?=
@@ -398,7 +251,7 @@ HTML;
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>Quote Documents</h3>
-                                <div class="dropzone" id="quote_documents"></div>
+                                <div class="dropzone quote-documents"></div>
                             </div>
                         </div>
                     </div>
@@ -419,38 +272,44 @@ HTML;
                         <div class="row">
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_1', ['template' => inputTemplate('fa-key')])
+    $form->field($customer_general, 'key_holder_1',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-key'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_1_email', ['template' => inputTemplate('fa-envelope')])
+    $form->field($customer_general, 'key_holder_1_email',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-envelope'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_1_phone', ['template' => inputTemplate('fa-phone-square')])
+    $form->field($customer_general, 'key_holder_1_phone',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-phone-square'])])
         ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
 ?>
                             </div>
 
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_2', ['template' => inputTemplate('fa-key')])
+    $form->field($customer_general, 'key_holder_2',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-key'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_2_email', ['template' => inputTemplate('fa-envelope')])
+    $form->field($customer_general, 'key_holder_2_email',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-envelope'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'key_holder_2_phone', ['template' => inputTemplate('fa-phone-square')])
+    $form->field($customer_general, 'key_holder_2_phone',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-phone-square'])])
         ->textInput(['placeholder' => '+44 (8-10) ___-___-__-__'])
 ?>
                             </div>
@@ -462,13 +321,15 @@ HTML;
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'start_date', ['template' => inputTemplate('fa-calendar-o')])
+    $form->field($customer_general, 'start_date',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-calendar-o'])])
         ->textInput(['placeholder' => '23.11.2017'])
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'number_of_visits', ['template' => inputTemplate('fa-medkit')])
+    $form->field($customer_general, 'number_of_visits',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-medkit'])])
         ->textInput()
 ?>
                             </div>
@@ -482,13 +343,14 @@ HTML;
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'urn', ['template' => inputTemplate('fa-tag')])
+    $form->field($customer_general, 'urn', ['template' => $this->render('/construct/input', ['icon' => 'fa-tag'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'nsi_number', ['template' => inputTemplate('fa-university')])
+    $form->field($customer_general, 'nsi_number',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-university'])])
         ->textInput()
 ?>
                             </div>
@@ -497,13 +359,15 @@ HTML;
                         <div class="row">
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'maintenance_cost', ['template' => inputTemplate('fa-wrench')])
+    $form->field($customer_general, 'maintenance_cost',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-wrench'])])
         ->textInput()
 ?>
                             </div>
                             <div class="col-md-4">
 <?=
-    $form->field($customer_general, 'monitoring_cost', ['template' => inputTemplate('fa-area-chart')])
+    $form->field($customer_general, 'monitoring_cost',
+        ['template' => $this->render('/construct/input', ['icon' => 'fa-area-chart'])])
         ->textInput()
 ?>
                             </div>
@@ -568,13 +432,17 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>Service & Maintenance Documents</h3>
-                                <div class="dropzone" id="general_documents"></div>
+                                <div class="dropzone general-documents"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button><a href="<?= Url::to(['customer/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a><a href="<?= Url::to(['customer/delete', 'id' => $customer->id]) ?>" class="btn btn-danger pull-right delete-btn"><i class="fa fa-trash-o"></i> Delete</a>
+            <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button>
+            <a href="<?= Url::to(['customer/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a>
+            <a href="<?= Url::to(['customer/delete', 'id' => $customer->id]) ?>" class="btn btn-danger pull-right delete-btn">
+                <i class="fa fa-trash-o"></i> Delete
+            </a>
         <?php
             ActiveForm::end();
         ?>
