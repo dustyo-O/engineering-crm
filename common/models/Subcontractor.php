@@ -37,14 +37,17 @@ use Yii;
  * @property string $screening
  * @property string $hs_pack
  * @property string $notes
- * @property string $photo
+ * @property integer $photo_id
  *
  * @property SubcontractorFirstAid $firstAid
  * @property SubcontractorOther1Label $other1Label
  * @property SubcontractorOther1Label $other2Label
  * @property SubcontractorOther1Label $other3Label
+ * @property Documents $photo
  * @property SubcontractorPosition $position
  * @property SubcontractorStatus $status
+ * @property SubcontractorDocuments[] $subcontractorDocuments
+ * @property Documents[] $documents
  */
 class Subcontractor extends \yii\db\ActiveRecord
 {
@@ -62,15 +65,16 @@ class Subcontractor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'company_name', 'date_of_commencement', 'address', 'status_id', 'telephone', 'mobile', 'email', 'ni_number', 'staff_number', 'position_id', 'vehicle_reg', 'ipaf', 'cscs', 'driving_license', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id', 'subcontractor_pack', 'training_courses', 'qualifications', 'insurance_expire', 'screening', 'hs_pack', 'notes', 'photo'], 'required'],
+            [['name', 'company_name', 'date_of_commencement', 'address', 'status_id', 'telephone', 'mobile', 'email', 'ni_number', 'staff_number', 'position_id', 'vehicle_reg', 'ipaf', 'cscs', 'driving_license', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id', 'subcontractor_pack', 'training_courses', 'qualifications', 'insurance_expire', 'screening', 'hs_pack', 'notes', 'photo_id'], 'required'],
             [['address', 'training_courses', 'qualifications', 'notes'], 'string'],
-            [['status_id', 'position_id', 'cscs', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id'], 'integer'],
+            [['status_id', 'position_id', 'cscs', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id', 'photo_id'], 'integer'],
             [['subcontractor_pack', 'insurance_expire', 'screening', 'hs_pack'], 'safe'],
-            [['name', 'company_name', 'date_of_commencement', 'telephone', 'mobile', 'email', 'ni_number', 'staff_number', 'vehicle_reg', 'ipaf', 'driving_license', 'photo'], 'string', 'max' => 255],
+            [['name', 'company_name', 'date_of_commencement', 'telephone', 'mobile', 'email', 'ni_number', 'staff_number', 'vehicle_reg', 'ipaf', 'driving_license'], 'string', 'max' => 255],
             [['first_aid_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorFirstAid::className(), 'targetAttribute' => ['first_aid_id' => 'id']],
             [['other1_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorOther1Label::className(), 'targetAttribute' => ['other1_label_id' => 'id']],
             [['other2_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorOther1Label::className(), 'targetAttribute' => ['other2_label_id' => 'id']],
             [['other3_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorOther1Label::className(), 'targetAttribute' => ['other3_label_id' => 'id']],
+            [['photo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Documents::className(), 'targetAttribute' => ['photo_id' => 'id']],
             [['position_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorPosition::className(), 'targetAttribute' => ['position_id' => 'id']],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubcontractorStatus::className(), 'targetAttribute' => ['status_id' => 'id']],
         ];
@@ -112,7 +116,7 @@ class Subcontractor extends \yii\db\ActiveRecord
             'screening' => 'Screening',
             'hs_pack' => 'Hs Pack',
             'notes' => 'Notes',
-            'photo' => 'Photo',
+            'photo_id' => 'Photo ID',
         ];
     }
 
@@ -151,6 +155,14 @@ class Subcontractor extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getPhoto()
+    {
+        return $this->hasOne(Documents::className(), ['id' => 'photo_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getPosition()
     {
         return $this->hasOne(SubcontractorPosition::className(), ['id' => 'position_id']);
@@ -162,5 +174,21 @@ class Subcontractor extends \yii\db\ActiveRecord
     public function getStatus()
     {
         return $this->hasOne(SubcontractorStatus::className(), ['id' => 'status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubcontractorDocuments()
+    {
+        return $this->hasMany(SubcontractorDocuments::className(), ['subcontractor_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocuments()
+    {
+        return $this->hasMany(Documents::className(), ['id' => 'document_id'])->viaTable('{{%subcontractor_documents}}', ['subcontractor_id' => 'id']);
     }
 }

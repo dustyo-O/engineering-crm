@@ -73,6 +73,8 @@ $('#customergeneral-start_date').datetimepicker({
 
 Dropzone.autoDiscover = false;
 
+initPopovers('{$model_add_ajax_url}');
+
 initDocumentsDropzone('quote', quoteDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
 initDocumentsDropzone('general', generalDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
 JS

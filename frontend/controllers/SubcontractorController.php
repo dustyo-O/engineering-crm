@@ -1,9 +1,11 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Documents;
 use common\models\Service;
 use common\models\ServiceCallType;
 use common\models\Subcontractor;
+use common\models\SubcontractorDocuments;
 use common\models\SubcontractorFirstAid;
 use common\models\SubcontractorOther1Label;
 use common\models\SubcontractorOther2Label;
@@ -83,7 +85,41 @@ class SubcontractorController extends Controller
      */
     public function actionEdit($id = null)
     {
-        $subcontractor = new Subcontractor();
+        if ($id)
+        {
+            $subcontractor = Subcontractor::findOne($id);
+        }
+        else
+        {
+            $subcontractor = new Subcontractor();
+        }
+
+        $subcontractor_info = Yii::$app->request->post("Subcontractor");
+
+        if ($subcontractor_info) {
+            $subcontractor->load($subcontractor_info, '');
+
+            if ($subcontractor->save()) {
+                $documents = Yii::$app->request->post("SubcontractorDocuments");
+
+                if ($documents)
+                {
+                    foreach ($documents as $document)
+                    {
+                        $subcontractor_document = new SubcontractorDocuments();
+
+                        $subcontractor_document->document_id = $document['id'];
+                        $subcontractor_document->subcontractor_id = $subcontractor->id;
+
+                        $subcontractor_document->save();
+                    }
+                }
+
+                Yii::$app->session->setFlash('success', 'Subcontractor saved succesfully');
+                return $this->redirect(Url::to(['subcontractor/list']));
+            }
+            Yii::$app->session->setFlash('error', 'Error, customer was not saved' . json_encode($subcontractor->errors));
+        }
 
         $subcontractor_statuses = SubcontractorStatus::find()->all();
         $subcontractor_positions = SubcontractorPosition::find()->all();

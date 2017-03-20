@@ -156,7 +156,6 @@ class CustomerController extends Controller
 
                         }
 
-
                         Yii::$app->session->setFlash('success', 'Customer saved succesfully');
                         return $this->redirect(Url::to(['customer/list']));
                     }

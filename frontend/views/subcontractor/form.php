@@ -2,7 +2,10 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use app\assets\Select2Asset;
 use app\assets\ToastAsset;
+use app\assets\DateTimePickerAsset;
+use app\assets\DropzoneAsset;
 
 /* @var $this \yii\web\View */
 /* @var $subcontractor \common\models\Subcontractor */
@@ -12,6 +15,67 @@ use app\assets\ToastAsset;
 /* @var $subcontractor_other2_labels \common\models\SubcontractorOther2Label[] */
 /* @var $subcontractor_other3_labels \common\models\SubcontractorOther3Label[] */
 /* @var $subcontractor_first_aids \common\models\SubcontractorFirstAid[] */
+
+$model_add_ajax_url = Url::to(['ajax/model-add']);
+$upload_documents_ajax_url = Url::to(['ajax/document-upload']);
+$document_download_url = Url::to(['documents/download', 'id' => '']);
+
+$_csrf = Yii::$app->request->getCsrfToken();
+
+$subcontractor_dropzone_data = [];
+foreach ($subcontractor->documents as $subcontractor_document)
+{
+    /* @var $subcontractor_document \common\models\Documents */
+    $subcontractor_dropzone_data[] = [
+        'id' => $subcontractor_document->id,
+        'name' => $subcontractor_document->filename,
+        'size' => $subcontractor_document->getFileSize()
+    ];
+}
+
+$subcontractor_dropzone_json = json_encode($subcontractor_dropzone_data);
+
+Select2Asset::register($this);
+DateTimePickerAsset::register($this);
+DropzoneAsset::register($this);
+
+$this->registerJsFile('/js/input-plugins-init.js', ['depends' => ['yii\web\JqueryAsset']]);
+$this->registerJsFile('/js/dropzone-documents-init.js', ['depends' => ['yii\web\JqueryAsset']]);
+
+$this->registerJs(<<<JS
+var subcontractorDocuments = {$subcontractor_dropzone_json};
+
+Dropzone.autoDiscover = false;
+
+new Dropzone('.photo-dropzone', {
+    url: '{$upload_documents_ajax_url}',
+    paramName: 'Documents[file]',
+    acceptedFiles: 'image/*',
+    sending: function(file, xhr, formData) {
+        formData.append('_csrf-frontend', '{$_csrf}');
+    },
+    success: function(file, response) {
+        if (response) {
+            $('input[name="Subcontractor[photo_id]"]').val(response.id);
+        }
+        
+        $('.photo-dropzone').css('background-image', "url('".concat('{$document_download_url}', response.id, "')"));
+        this.removeFile(file);
+    }
+});
+
+initPopovers('{$model_add_ajax_url}');
+initDocumentsDropzone('subcontractor', subcontractorDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
+
+JS
+);
+
+$this->registerCss(<<<CSS
+.photo-dropzone {
+    background-size: cover;
+}
+CSS
+);
 
 $dropdown_template = $this->render('/construct/dropdown', []);
 $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
@@ -179,6 +243,8 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
 '])->textInput()
                                     ?>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <?=
                                     $form->field($subcontractor, 'first_aid_id', ['template' => $dropdown_template])
@@ -230,7 +296,7 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3>Documents</h3>
-                                    <div class="dropzone" id="subcontractor_documents"></div>
+                                    <div class="dropzone subcontractor-documents"></div>
                                 </div>
                             </div>
                         </fieldset>
@@ -269,9 +335,15 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
                                 </div>
                                 <div class="col-md-4">
                                     <h3>Photo</h3>
-                                    <div class="dropzone" id="photo"></div>
+                                    <div class="dropzone photo-dropzone"<?php
+                                    if ($subcontractor->photo_id) {
+                                        echo 'style="background-image: url(\'' .
+                                            $document_download_url . $subcontractor->photo_id . '\')"';
+                                    }
+                                    ?>></div>
                                 </div>
                             </div>
+                            <?= $form->field($subcontractor, 'photo_id')->hiddenInput()->label(false); ?>
                         </fieldset>
                     </div>
                 </div>
