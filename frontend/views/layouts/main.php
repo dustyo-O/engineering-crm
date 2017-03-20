@@ -169,6 +169,9 @@ JS
             <li>
                 <a href="<?= Url::to(['customer/list']) ?>" title="Customers"><i class="fa fa-lg fa-fw fa-male"></i> Customers</a>
             </li>
+            <li>
+                <a href="<?= Url::to(['subcontractor/list']) ?>" title="Subcontractors"><i class="fa fa-lg fa-fw fa-handshake-o"></i> Subcontractors</a>
+            </li>
         </ul>
     </nav>
 </aside>

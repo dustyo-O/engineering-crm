@@ -45,6 +45,10 @@ $this->registerJsFile('/js/dropzone-documents-init.js', ['depends' => ['yii\web\
 $this->registerJs(<<<JS
 var subcontractorDocuments = {$subcontractor_dropzone_json};
 
+$('.datepicker-input').datetimepicker({
+    format: 'DD.MM.YYYY'
+});
+
 Dropzone.autoDiscover = false;
 
 new Dropzone('.photo-dropzone', {
@@ -66,7 +70,6 @@ new Dropzone('.photo-dropzone', {
 
 initPopovers('{$model_add_ajax_url}');
 initDocumentsDropzone('subcontractor', subcontractorDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
-
 JS
 );
 
@@ -118,7 +121,7 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
                                     <?=
                                     $form->field($subcontractor, 'date_of_commencement',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar-check-o' ])])
-                                        ->textInput(['placeholder' => '23.11.2019'])
+                                        ->textInput(['placeholder' => '23.11.2019', 'class' => 'datepicker-input form-control'])
                                     ?>
 
                                 </div>
@@ -256,7 +259,7 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
                                     <?=
                                     $form->field($subcontractor, 'subcontractor_pack',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar-o' ])])
-                                        ->textInput(['placeholder' => '11.03.2017'])
+                                        ->textInput(['placeholder' => '11.03.2017', 'class' => 'datepicker-input form-control'])
                                     ?>
                                 </div>
                                 <div class="col-md-4">
@@ -306,21 +309,21 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
                                     <?=
                                     $form->field($subcontractor, 'insurance_expire',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar-times-o' ])])
-                                        ->textInput(['placeholder' => '11.03.2017'])
+                                        ->textInput(['placeholder' => '11.03.2017', 'class' => 'datepicker-input form-control'])
                                     ?>
                                 </div>
                                 <div class="col-md-4">
                                     <?=
                                     $form->field($subcontractor, 'screening',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar' ])])
-                                        ->textInput(['placeholder' => '11.03.2017'])
+                                        ->textInput(['placeholder' => '11.03.2017', 'class' => 'datepicker-input form-control'])
                                     ?>
                                 </div>
                                 <div class="col-md-4">
                                     <?=
                                     $form->field($subcontractor, 'hs_pack',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar-plus-o' ])])
-                                        ->textInput(['placeholder' => '11.03.2017'])
+                                        ->textInput(['placeholder' => '11.03.2017', 'class' => 'datepicker-input form-control'])
                                     ?>
                                 </div>
                             </div>

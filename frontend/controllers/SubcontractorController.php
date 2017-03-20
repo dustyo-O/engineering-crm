@@ -88,6 +88,12 @@ class SubcontractorController extends Controller
         if ($id)
         {
             $subcontractor = Subcontractor::findOne($id);
+
+            $subcontractor->date_of_commencement = (new \DateTime($subcontractor->date_of_commencement))->format('d.m.Y');
+            $subcontractor->subcontractor_pack = (new \DateTime($subcontractor->subcontractor_pack))->format('d.m.Y');
+            $subcontractor->insurance_expire = (new \DateTime($subcontractor->insurance_expire))->format('d.m.Y');
+            $subcontractor->screening = (new \DateTime($subcontractor->screening))->format('d.m.Y');
+            $subcontractor->hs_pack = (new \DateTime($subcontractor->hs_pack))->format('d.m.Y');
         }
         else
         {
@@ -98,6 +104,12 @@ class SubcontractorController extends Controller
 
         if ($subcontractor_info) {
             $subcontractor->load($subcontractor_info, '');
+
+            $subcontractor->date_of_commencement = (new \DateTime($subcontractor->date_of_commencement))->format('Y-m-d H:i:s');
+            $subcontractor->subcontractor_pack = (new \DateTime($subcontractor->subcontractor_pack))->format('Y-m-d H:i:s');
+            $subcontractor->insurance_expire = (new \DateTime($subcontractor->insurance_expire))->format('Y-m-d H:i:s');
+            $subcontractor->screening = (new \DateTime($subcontractor->screening))->format('Y-m-d H:i:s');
+            $subcontractor->hs_pack = (new \DateTime($subcontractor->hs_pack))->format('Y-m-d H:i:s');
 
             if ($subcontractor->save()) {
                 $documents = Yii::$app->request->post("SubcontractorDocuments");
@@ -146,5 +158,10 @@ class SubcontractorController extends Controller
 
     public function actionList()
     {
+        $subcontractors = Subcontractor::find()->all();
+
+        return $this->render('list', [
+            'subcontractors' => $subcontractors
+        ]);
     }
 }

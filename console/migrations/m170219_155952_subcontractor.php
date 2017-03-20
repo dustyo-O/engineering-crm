@@ -16,7 +16,7 @@ class m170219_155952_subcontractor extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'company_name' => $this->string()->notNull(),
-            'date_of_commencement' => $this->string()->notNull(),
+            'date_of_commencement' => $this->dateTime()->notNull(),
             'address' => $this->text()->notNull(),
             'status_id' => $this->integer()->notNull(),
             'telephone' => $this->string()->notNull(),
