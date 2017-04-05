@@ -76,8 +76,35 @@ class ServiceController extends Controller
      */
     public function actionEdit($id = null)
     {
+        if ($id)
+        {
+            $service = Service::findOne($id);
+
+            $service->date = (new \DateTime($service->date))->format('d.m.Y');
+            $service->time = date('H:i', $service->time);
+        }
+        else
+        {
+            $service = new Service();
+        }
+
+        $service_info = Yii::$app->request->post("Service");
+
+        if ($service_info) {
+            $service->load($service_info, '');
+
+            $service->date = (new \DateTime($service->date))->format('Y-m-d H:i:s');
+            $service->time = strtotime($service->time);
+
+            if ($service->save()) {
+
+                Yii::$app->session->setFlash('success', 'Service saved succesfully');
+                return $this->redirect(Url::to(['service/list']));
+            }
+            Yii::$app->session->setFlash('error', 'Error, service was not saved' . json_encode($service->errors));
+        }
+
         $service_call_types = ServiceCallType::find()->all();
-        $service = new Service();
         return $this->render('form', [
             'service' => $service,
             'service_call_types' => $service_call_types
@@ -86,11 +113,15 @@ class ServiceController extends Controller
 
     public function actionDelete($id)
     {
-
     }
 
     public function actionList()
     {
+        $services = Service::find()->all();
+
+        return $this->render('list', [
+            'services' => $services
+        ]);
     }
 
 }

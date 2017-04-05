@@ -3,15 +3,36 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\assets\ToastAsset;
+use app\assets\DateTimePickerAsset;
+use app\assets\Select2Asset;
 
 /* @var $this \yii\web\View */
 /* @var $service \common\models\Service */
 /* @var $service_call_types \common\models\ServiceCallType[] */
 
+Select2Asset::register($this);
+DateTimePickerAsset::register($this);
+
+$model_add_ajax_url = Url::to(['ajax/model-add']);
+
+$this->registerJsFile('/js/input-plugins-init.js', ['depends' => ['yii\web\JqueryAsset']]);
+
+$this->registerJs(
+<<<JS
+$('.datepicker-input').datetimepicker({
+    format: 'DD.MM.YYYY'
+});
+
+$('.timepicker-input').datetimepicker({
+    format: 'HH:mm'
+});
+
+initPopovers('{$model_add_ajax_url}');
+JS
+);
+
 $dropdown_template = $this->render('/construct/dropdown', []);
-
 ?>
-
 <div class="row">
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -73,14 +94,14 @@ $dropdown_template = $this->render('/construct/dropdown', []);
                                     <?=
                                     $form->field($service, 'date',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-calendar-o' ])])
-                                        ->textInput(['placeholder' => '23.11.2017'])
+                                        ->textInput(['placeholder' => '23.11.2017', 'class' => 'datepicker-input form-control'])
                                     ?>
                                 </div>
                                 <div class="col-md-4">
                                     <?=
                                     $form->field($service, 'time',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-clock-o' ])])
-                                        ->textInput()
+                                        ->textInput(['placeholder' => '18:32', 'class' => 'timepicker-input form-control'])
                                     ?>
                                 </div>
                             </div>
@@ -89,7 +110,7 @@ $dropdown_template = $this->render('/construct/dropdown', []);
                                     <?=
                                     $form->field($service, 'problem_reported',
                                         ['template' => $this->render('/construct/input', [ 'icon' => 'fa-bolt' ])])
-                                        ->textInput()
+                                        ->textInput(['class' => 'problem-input form-control'])
                                     ?>
                                 </div>
                             </div>
@@ -101,7 +122,11 @@ $dropdown_template = $this->render('/construct/dropdown', []);
             <!-- end widget div -->
         </div>
         <!-- end widget -->
-        <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button><a href="<?= Url::to(['service/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a><a href="<?= Url::to(['service/delete', 'id' => $service->id]) ?>" class="btn btn-danger pull-right delete-btn"><i class="fa fa-trash-o"></i> Delete</a>
+        <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button>
+        <a href="<?= Url::to(['service/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a>
+        <a href="<?= Url::to(['service/delete', 'id' => $service->id]) ?>" class="btn btn-danger pull-right delete-btn">
+            <i class="fa fa-trash-o"></i> Delete
+        </a>
         <?php
         ActiveForm::end();
         ?>

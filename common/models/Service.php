@@ -38,8 +38,8 @@ class Service extends \yii\db\ActiveRecord
             [['customer', 'contact', 'telephone', 'address', 'call_type_id', 'date', 'time', 'problem_reported'], 'required'],
             [['address'], 'string'],
             [['call_type_id'], 'integer'],
-            [['date'], 'safe'],
-            [['customer', 'contact', 'telephone', 'time', 'problem_reported'], 'string', 'max' => 255],
+            [['date', 'time'], 'safe'],
+            [['customer', 'contact', 'telephone', 'problem_reported'], 'string', 'max' => 255],
             [['call_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ServiceCallType::className(), 'targetAttribute' => ['call_type_id' => 'id']],
         ];
     }
