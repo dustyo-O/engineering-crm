@@ -78,3 +78,18 @@ select.form-control {
 .address-container textarea {
     resize: none;
 }
+
+header .logout {
+    height: 49px;
+    vertical-align: middle;
+    line-height: 49px;
+    float: right;
+}
+
+header .logout a {
+    color: #3a3633;
+}
+
+.login > #main {
+    margin-left: 60px;
+}

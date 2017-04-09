@@ -9,6 +9,7 @@ use yii\base\Response;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\UploadedFile;
+use yii\web\ErrorAction;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -32,7 +33,17 @@ class AjaxController extends Controller
      */
     public function behaviors()
     {
-        return [];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ]
+        ];
     }
 
     /**
