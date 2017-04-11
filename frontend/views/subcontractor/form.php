@@ -3,7 +3,6 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\assets\Select2Asset;
-use app\assets\ToastAsset;
 use app\assets\DateTimePickerAsset;
 use app\assets\DropzoneAsset;
 
@@ -15,6 +14,14 @@ use app\assets\DropzoneAsset;
 /* @var $subcontractor_other2_labels \common\models\SubcontractorOther2Label[] */
 /* @var $subcontractor_other3_labels \common\models\SubcontractorOther3Label[] */
 /* @var $subcontractor_first_aids \common\models\SubcontractorFirstAid[] */
+
+$this->title = $subcontractor->id ? 'Subcontractor ' . $subcontractor->company_name : 'New subcontractor';
+
+$this->params['breadcrumbs'][] = [
+    "url" => Url::to(['subcontractor/list']),
+    "label" => "Subcontractors"
+];
+$this->params['breadcrumbs'][] = $this->title;
 
 $model_add_ajax_url = Url::to(['ajax/model-add']);
 $upload_documents_ajax_url = Url::to(['ajax/document-upload']);

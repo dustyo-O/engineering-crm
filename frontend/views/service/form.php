@@ -2,13 +2,20 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use app\assets\ToastAsset;
 use app\assets\DateTimePickerAsset;
 use app\assets\Select2Asset;
 
 /* @var $this \yii\web\View */
 /* @var $service \common\models\Service */
 /* @var $service_call_types \common\models\ServiceCallType[] */
+
+$this->title = $service->id ? 'Service ' . $service->problem_reported : 'New service';
+
+$this->params['breadcrumbs'][] = [
+    "url" => Url::to(['service/list']),
+    "label" => "Service"
+];
+$this->params['breadcrumbs'][] = $this->title;
 
 Select2Asset::register($this);
 DateTimePickerAsset::register($this);

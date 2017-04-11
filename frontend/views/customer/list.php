@@ -4,6 +4,10 @@
 
 use yii\helpers\Url;
 
+$this->title = 'Customers list';
+
+$this->params['breadcrumbs'][] = "Customers";
+
 ?>
 <!-- row -->
 <div class="row">

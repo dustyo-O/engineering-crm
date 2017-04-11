@@ -127,10 +127,18 @@ JS
             </span>
         </span>
 
-        <!-- breadcrumb -->
-        <ol class="breadcrumb">
-            <li>Home</li><li>Miscellaneous</li><li>Blank Page</li>
-        </ol>
+        <?php
+        $links = isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [];
+
+        if (count($links) > 0)
+        {
+            echo Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}</li>\n", // template for all links
+                'links' => $links
+            ]);
+        }
+        ?>
+
     </div>
     <!-- END RIBBON -->
 

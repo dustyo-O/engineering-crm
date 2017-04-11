@@ -19,9 +19,16 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use app\assets\Select2Asset;
-use app\assets\ToastAsset;
 use app\assets\DateTimePickerAsset;
 use app\assets\DropzoneAsset;
+
+$this->title = $customer->id ? 'Customer ' . $customer->customer : 'New customer';
+
+$this->params['breadcrumbs'][] = [
+    "url" => Url::to(['customer/list']),
+    "label" => "Customers"
+];
+$this->params['breadcrumbs'][] = $this->title;
 
 Select2Asset::register($this);
 DateTimePickerAsset::register($this);

@@ -5,6 +5,10 @@
 use yii\helpers\Url;
 use app\assets\FullCalendarAsset;
 
+$this->title = 'Services calendar';
+
+$this->params['breadcrumbs'][] = "Services";
+
 FullCalendarAsset::register($this);
 
 $event_edit_url = Url::to(['service/edit', 'id' => '']);

@@ -4,6 +4,10 @@
 
 use yii\helpers\Url;
 
+$this->title = 'Subcontractors list';
+
+$this->params['breadcrumbs'][] = "Subcontractors";
+
 ?>
 <!-- widget grid -->
 <section id="widget-grid" class="">
