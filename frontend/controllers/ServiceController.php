@@ -107,6 +107,13 @@ class ServiceController extends Controller
 
     public function actionDelete($id)
     {
+        if (Service::deleteAll(['id' => $id])) {
+            Yii::$app->session->setFlash('success', 'Service removed succesfully');
+        } else {
+            Yii::$app->session->setFlash('error', 'Error, service was not deleted');
+        }
+
+        return $this->redirect(Url::to(['service/list']));
     }
 
     public function actionList()

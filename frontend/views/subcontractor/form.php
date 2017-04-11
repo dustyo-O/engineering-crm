@@ -18,6 +18,7 @@ use app\assets\DropzoneAsset;
 
 $model_add_ajax_url = Url::to(['ajax/model-add']);
 $upload_documents_ajax_url = Url::to(['ajax/document-upload']);
+$remove_documents_ajax_url = Url::to(['ajax/document-remove']);
 $document_download_url = Url::to(['documents/download', 'id' => '']);
 
 $_csrf = Yii::$app->request->getCsrfToken();
@@ -69,7 +70,8 @@ new Dropzone('.photo-dropzone', {
 });
 
 initPopovers('{$model_add_ajax_url}');
-initDocumentsDropzone('subcontractor', subcontractorDocuments, '{$upload_documents_ajax_url}', '{$document_download_url}', '{$_csrf}');
+initDocumentsDropzone('subcontractor', subcontractorDocuments, '{$upload_documents_ajax_url}', 
+    '{$document_download_url}', '{$remove_documents_ajax_url}', '{$_csrf}');
 JS
 );
 

@@ -88,11 +88,11 @@ class AjaxController extends Controller
             }
             else
             {
-                throw new ErrorException('Не удалось сохранить данные');
+                throw new ErrorException('Saving failed');
             }
         }
 
-        throw new ErrorException('Неправильный запрос');
+        throw new ErrorException('Not enough data');
     }
 
     /**
@@ -115,14 +115,42 @@ class AjaxController extends Controller
             else
             {
                 $document->clean();
-                throw new ErrorException('Не удалось сохранить данные в БД');
+                throw new ErrorException('Database fail');
             }
         }
         else
         {
-            throw new ErrorException('Загрузка файла не удалась');
+            throw new ErrorException('Upload failed');
         }
 
     }
 
+
+    /**
+     * Removes Document and deletes the record to db
+     * @return array Result Info
+     * @throws ErrorException remove Errors
+     */
+    public function actionDocumentRemove()
+    {
+        $id = Yii::$app->request->post('id', null);
+
+        $document = Documents::findOne($id);
+
+        if ($document)
+        {
+            if ($document->delete())
+            {
+                return ['status' => 'ok'];
+            }
+            else
+            {
+                throw new ErrorException('File deletion failed');
+            }
+        }
+        else
+        {
+            throw new ErrorException('Document does not exists');
+        }
+    }
 }

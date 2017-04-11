@@ -1,9 +1,10 @@
-function initDocumentsDropzone(dropzoneName, documents, uploadUrl, downloadUrl, csrf) {
+function initDocumentsDropzone(dropzoneName, documents, uploadUrl, downloadUrl, deleteUrl, csrf) {
 
     var elementName = 'div.' + dropzoneName + '-documents';
     var dropzone = new Dropzone(elementName, {
         url: uploadUrl,
         paramName: 'Documents[file]',
+        addRemoveLinks: true,
         sending: function(file, xhr, formData) {
             formData.append('_csrf-frontend', csrf);
         },
@@ -23,6 +24,17 @@ function initDocumentsDropzone(dropzoneName, documents, uploadUrl, downloadUrl, 
                 $('.download-file').prop('src', ''.concat(downloadUrl + (file.id || response.id)));
             }
         }
+    });
+
+    dropzone.on('removedfile', function(file) {
+        $.ajax({
+            url: deleteUrl,
+            method: 'POST',
+            data: {
+                id: file.id
+            },
+            dataType: 'json'
+        })
     });
 
     if (documents) {

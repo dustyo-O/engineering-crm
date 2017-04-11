@@ -123,6 +123,22 @@ class Documents extends \yii\db\ActiveRecord
         @unlink(static::uploadDirectory() . $this->folder);
     }
 
+    public static function documentModels() {
+        return [
+            QuoteDocuments::className(),
+            SubcontractorDocuments::className(),
+            GeneralDocuments::className()
+        ];
+    }
+
+    public function beforeDelete()
+    {
+        foreach (static::documentModels() as $model) {
+            $model::deleteAll(['document_id' => $this->id]);
+        }
+        return parent::beforeDelete();
+    }
+
     public function afterDelete()
     {
         $this->clean();
