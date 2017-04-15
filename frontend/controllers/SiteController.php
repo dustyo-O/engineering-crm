@@ -67,6 +67,16 @@ class SiteController extends Controller
         ];
     }
 
+    public function beforeAction($action) {
+        if (parent::beforeAction($action)) {
+            // change layout for error action
+            if ($action->id=='error') $this->layout ='error';
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Logs in a user.
      *
@@ -99,5 +109,10 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return  $this->redirect(Url::to(['site/login']));
+    }
+
+    public function actionIndex()
+    {
+        return $this->render('index');
     }
 }
