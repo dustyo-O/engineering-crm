@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 $this->title = 'Subcontractors list';
 
-$this->params['breadcrumbs'][] = "Subcontractors";
+$this->params['breadcrumbs'][] = "HR & Subcontractors";
 
 ?>
 <!-- widget grid -->

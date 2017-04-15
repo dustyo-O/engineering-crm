@@ -244,7 +244,7 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
 ?>
 <?=
     $form->field($customer_quote, 'quote_amount',
-        ['template' => $this->render('/construct/input', [ 'icon' => 'fa-euro'])])
+        ['template' => $this->render('/construct/input', [ 'icon' => 'fa-gbp'])])
         ->textInput()
 ?>
 <?=

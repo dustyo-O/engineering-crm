@@ -106,7 +106,7 @@ JS
                 <a href="<?= Url::to(['customer/list']) ?>" title="Customers"><i class="fa fa-lg fa-fw fa-male"></i> Customers</a>
             </li>
             <li>
-                <a href="<?= Url::to(['subcontractor/list']) ?>" title="Subcontractors"><i class="fa fa-lg fa-fw fa-handshake-o"></i> Subcontractors</a>
+                <a href="<?= Url::to(['subcontractor/list']) ?>" title="HR & Subcontractors"><i class="fa fa-lg fa-fw fa-handshake-o"></i>HR & Subcontractors</a>
             </li>
             <li>
                 <a href="<?= Url::to(['service/list']) ?>" title="Service"><i class="fa fa-lg fa-fw fa-wrench"></i> Services</a>

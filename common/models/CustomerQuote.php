@@ -58,7 +58,7 @@ class CustomerQuote extends \yii\db\ActiveRecord
             'address' => 'Address',
             'quote_number' => 'Quote Number',
             'quote_amount' => 'Quote Amount',
-            'quote_status_id' => 'Quote Status ID',
+            'quote_status_id' => 'Quote Status',
             'notes' => 'Notes',
         ];
     }

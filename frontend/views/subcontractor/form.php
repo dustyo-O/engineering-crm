@@ -19,7 +19,7 @@ $this->title = $subcontractor->id ? 'Subcontractor ' . $subcontractor->company_n
 
 $this->params['breadcrumbs'][] = [
     "url" => Url::to(['subcontractor/list']),
-    "label" => "Subcontractors"
+    "label" => "HR & Subcontractors"
 ];
 $this->params['breadcrumbs'][] = $this->title;
 
