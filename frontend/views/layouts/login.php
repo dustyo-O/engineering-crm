@@ -27,7 +27,7 @@ $this->beginPage();
 <header id="header">
 
     <div id="logo-group">
-        <span id="logo"> <img src="img/logo.png" alt="SmartAdmin"> </span>
+        <span id="logo"> <img src="/img/logo.png" alt="Engineering"> </span>
     </div>
 
 
@@ -43,7 +43,7 @@ $this->beginPage();
                 <h1 class="txt-color-red login-header-big">CRM System</h1>
                 <div class="hero">
 
-                    <img src="img/demo/iphoneview.png" class="pull-right display-image" alt="" style="width:210px">
+                    <img src="/img/container.svg" class="pull-right display-image" alt="" style="width:410px">
 
                 </div>
 

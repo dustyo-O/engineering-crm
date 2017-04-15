@@ -2,10 +2,14 @@
 use yii\widgets\ActiveForm;
 
 /* @var $this \yii\web\View */
-
-$login_field_template = <<<HTML
-
-HTML;
+$this->registerCss(<<<CSS
+@media all and (max-width: 998px) {
+    .login > #main {
+        margin-left: auto;
+    }
+}
+CSS
+);
 ?>
 <?php $form = ActiveForm::begin(['id' => 'login-form', 'options' => ['class' => 'smart-form client-form']]); ?>
 
