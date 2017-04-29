@@ -24,26 +24,29 @@ $this->beginPage();
 <head>
 <body class="login animated fadeInDown">
 
+<!-- #HEADER -->
 <header id="header">
-
     <div id="logo-group">
-        <span id="logo"> <img src="/img/logo.png" alt="Engineering"> </span>
+
+        <!-- PLACE YOUR LOGO HERE -->
+        <a href="<?= Url::to(['site/index']) ?>"><span id="logo"> <img src="/img/merlin-logo.jpg"> Merlin CRM </span></a>
+        <!-- END LOGO PLACEHOLDER -->
+
     </div>
-
-
 </header>
-
+<!-- END HEADER -->
 <div id="main" role="main">
 
     <!-- MAIN CONTENT -->
     <div id="content" class="container">
 
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5 hidden-xs hidden-sm">
-                <h1 class="txt-color-red login-header-big">CRM System</h1>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5 hidden-xs hidden-sm text-center">
+                <h1 class="txt-color-red login-header-big">MERLIN CRM System</h1>
                 <div class="hero">
 
-                    <img src="/img/container.svg" class="pull-right display-image" alt="" style="width:410px">
+                    <img src="/img/merlin.jpg">
+                    <img src="/img/kse-logo-on-black.jpg">
 
                 </div>
 

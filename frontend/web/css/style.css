@@ -148,6 +148,11 @@ body.welcome-page, .welcome-page #content {
     color: #fff;
 }
 
+#logo img {
+    width: auto;
+    height: 32px;
+}
+
 @media all and (min-width: 414px) and (max-width: 998px)  {
     .welcome-page #main {
         background: url(/img/architecture998.jpg);

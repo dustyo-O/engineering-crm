@@ -15,7 +15,7 @@ use app\assets\DropzoneAsset;
 /* @var $subcontractor_other3_labels \common\models\SubcontractorOther3Label[] */
 /* @var $subcontractor_first_aids \common\models\SubcontractorFirstAid[] */
 
-$this->title = $subcontractor->id ? 'Subcontractor ' . $subcontractor->company_name : 'New subcontractor';
+$this->title = $subcontractor->id ? 'Subcontractor ' . $subcontractor->company_name : 'New';
 
 $this->params['breadcrumbs'][] = [
     "url" => Url::to(['subcontractor/list']),
@@ -107,7 +107,7 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
         <div class="jarviswidget">
             <header>
                 <span class="widget-icon"> <i class="fa fa-briefcase"></i> </span>
-                <h2>Subcontractor information</h2>
+                <h2>Information</h2>
             </header>
             <!-- widget div-->
             <div>

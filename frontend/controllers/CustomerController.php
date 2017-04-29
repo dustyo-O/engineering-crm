@@ -175,10 +175,7 @@ class CustomerController extends Controller
         $general_maintenance_contracts = GeneralMaintenanceContract::find()->all();
         $general_signalling_types = GeneralSignallingType::find()->all();
         $general_other_labels = GeneralOtherLabel::find()->all();
-        $general_account_managers = GeneralAccountManager::find()->all();
-        $general_misc1 = GeneralMisc1::find()->all();
         $general_misc1_labels = GeneralMisc1Label::find()->all();
-        $general_misc2 = GeneralMisc2::find()->all();
         $general_misc2_labels = GeneralMisc2Label::find()->all();
 
         return $this->render('form', [
@@ -193,10 +190,7 @@ class CustomerController extends Controller
             'general_maintenance_contracts' => $general_maintenance_contracts,
             'general_signalling_types' => $general_signalling_types,
             'general_other_labels' => $general_other_labels,
-            'general_account_managers' => $general_account_managers,
-            'general_misc1' => $general_misc1,
             'general_misc1_labels' => $general_misc1_labels,
-            'general_misc2' => $general_misc2,
             'general_misc2_labels' => $general_misc2_labels,
         ]);
     }

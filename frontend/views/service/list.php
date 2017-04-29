@@ -7,7 +7,7 @@ use app\assets\FullCalendarAsset;
 
 $this->title = 'Services calendar';
 
-$this->params['breadcrumbs'][] = "Services";
+$this->params['breadcrumbs'][] = "Service & Maintenance";
 
 FullCalendarAsset::register($this);
 
@@ -40,7 +40,7 @@ JS
 <div class="row">
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <a class="btn btn-lg btn-success" href="<?= Url::to(['service/create']) ?>">Create new service</a>
+        <a class="btn btn-lg btn-success" href="<?= Url::to(['service/create']) ?>">Create new visit</a>
         <div class="calendar"></div>
     </article>
 </div>

@@ -9,11 +9,11 @@ use app\assets\Select2Asset;
 /* @var $service \common\models\Service */
 /* @var $service_call_types \common\models\ServiceCallType[] */
 
-$this->title = $service->id ? 'Service ' . $service->problem_reported : 'New service';
+$this->title = $service->id ? 'Service ' . $service->problem_reported : 'New visit';
 
 $this->params['breadcrumbs'][] = [
     "url" => Url::to(['service/list']),
-    "label" => "Service"
+    "label" => "Service & Maintenance"
 ];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -54,7 +54,7 @@ $dropdown_template = $this->render('/construct/dropdown', []);
         <div class="jarviswidget">
             <header>
                 <span class="widget-icon"> <i class="fa fa-briefcase"></i> </span>
-                <h2>Service information</h2>
+                <h2>Service booking</h2>
             </header>
             <!-- widget div-->
             <div>

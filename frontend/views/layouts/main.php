@@ -65,7 +65,7 @@ JS
     <div id="logo-group">
 
         <!-- PLACE YOUR LOGO HERE -->
-        <span id="logo"> <img src="/img/logo.png" alt="SmartAdmin"> </span>
+        <a href="<?= Url::to(['site/index']) ?>"><span id="logo"> <img src="/img/merlin-logo.jpg"> Merlin CRM </span></a>
         <!-- END LOGO PLACEHOLDER -->
 
     </div>
@@ -106,10 +106,10 @@ JS
                 <a href="<?= Url::to(['customer/list']) ?>" title="Customers"><i class="fa fa-lg fa-fw fa-male"></i> Customers</a>
             </li>
             <li>
-                <a href="<?= Url::to(['subcontractor/list']) ?>" title="HR & Subcontractors"><i class="fa fa-lg fa-fw fa-handshake-o"></i>HR & Subcontractors</a>
+                <a href="<?= Url::to(['subcontractor/list']) ?>" title="HR & Subcontractors"><i class="fa fa-lg fa-fw fa-handshake-o"></i> HR & Subcontractors</a>
             </li>
             <li>
-                <a href="<?= Url::to(['service/list']) ?>" title="Service"><i class="fa fa-lg fa-fw fa-wrench"></i> Services</a>
+                <a href="<?= Url::to(['service/list']) ?>" title="Service"><i class="fa fa-lg fa-fw fa-wrench"></i> Service & Maintenance</a>
             </li>
         </ul>
     </nav>
@@ -122,7 +122,7 @@ JS
     <div id="ribbon">
 
         <span class="ribbon-button-alignment">
-            <span id="refresh" class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true">
+            <span id="refresh" class="btn btn-ribbon" onclick="javascript: document.location.reload();">
                 <i class="fa fa-refresh"></i>
             </span>
         </span>
@@ -157,7 +157,7 @@ JS
 <div class="page-footer">
     <div class="row">
         <div class="col-xs-12 col-sm-6">
-            <span class="txt-color-white">Made by <a href="https://www.fl.ru/users/dustyo_o/">Alexandr Shleyko</a>. 2017</span>
+            <span class="txt-color-white"><span class="hidden-xs">Designed & built by </span><a href="https://www.fl.ru/users/dustyo_o/">Alexandr Shleyko</a> &copy; 2017</span>
         </div>
     </div>
 </div>

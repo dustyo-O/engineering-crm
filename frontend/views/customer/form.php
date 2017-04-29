@@ -9,10 +9,7 @@
 /* @var $general_maintenance_contracts \common\models\GeneralMaintenanceContract[] */
 /* @var $general_signalling_types \common\models\GeneralSignallingType[] */
 /* @var $general_other_labels \common\models\GeneralOtherLabel[] */
-/* @var $general_account_managers \common\models\GeneralAccountManager[] */
-/* @var $general_misc1 \common\models\GeneralMisc1[] */
 /* @var $general_misc1_labels \common\models\GeneralMisc1Label[] */
-/* @var $general_misc2 \common\models\GeneralMisc2[] */
 /* @var $general_misc2_labels \common\models\GeneralMisc2Label[] */
 
 use yii\widgets\ActiveForm;
@@ -403,21 +400,16 @@ $form->field($customer_general, 'other_costs', ['template' => '
                                 <div class="col-md-6">
                                     <div class="siderow">
 <?=
-$form->field($customer_general, 'account_manager_id', ['template' => $dropdown_template])
-    ->dropDownList(ArrayHelper::map($general_account_managers, 'id', 'title'), ['prompt' => 'Choose one...']);
-?>
-                                    </div>
-                                    <div class="siderow">
-<?=
     $form->field($customer_general, 'misc1_label_id', ['template' => $dropdown_template_no_title])
         ->dropDownList(ArrayHelper::map($general_misc1_labels, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
-
-                                    </div>
-                                    <div class="siderow">
 <?=
-    $form->field($customer_general, 'misc1_id', ['template' => $dropdown_template_no_title])
-        ->dropDownList(ArrayHelper::map($general_misc1, 'id', 'title'), ['prompt' => 'Choose one...']);
+    $form->field($customer_general, 'misc1', ['template' => '
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                    {input}
+                                </div>
+'])->textInput()
 ?>
                                     </div>
                                     <div class="siderow">
@@ -425,17 +417,19 @@ $form->field($customer_general, 'account_manager_id', ['template' => $dropdown_t
     $form->field($customer_general, 'misc2_label_id', ['template' => $dropdown_template_no_title])
         ->dropDownList(ArrayHelper::map($general_misc2_labels, 'id', 'title'), ['prompt' => 'Choose one...']);
 ?>
-                                    </div>
-                                    <div class="siderow">
 <?=
-    $form->field($customer_general, 'misc2_id', ['template' => $dropdown_template_no_title])
-        ->dropDownList(ArrayHelper::map($general_misc2, 'id', 'title'), ['prompt' => 'Choose one...']);
+    $form->field($customer_general, 'misc2', ['template' => '
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                    {input}
+                                </div>
+'])->textInput()
 ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6 address-container">
 <?=
-    $form->field($customer_general, 'notes', ['template' => '<h3>{label}</h3>{input}'])
+    $form->field($customer_general, 'notes', ['template' => '<h3 style="margin-top: 0">{label}</h3>{input}'])
         ->textarea()
 ?>
                                 </div>

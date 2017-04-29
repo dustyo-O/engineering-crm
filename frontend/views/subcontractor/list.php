@@ -17,19 +17,18 @@ $this->params['breadcrumbs'][] = "HR & Subcontractors";
 
         <!-- NEW WIDGET START -->
         <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <a class="btn btn-lg btn-success" href="<?= Url::to(['subcontractor/create']) ?>">Create new subcontractor</a>
+            <a class="btn btn-lg btn-success" href="<?= Url::to(['subcontractor/create']) ?>">Create new</a>
 
             <!-- Widget ID (each widget will need unique ID)-->
             <div class="jarviswidget">
                 <header role="heading">
                     <span class="widget-icon"> <i class="fa fa-handshake-o"></i> </span>
-                    <h2>Subcontractors </h2>
+                    <h2>Staff & Subcontractors</h2>
 
                 </header>
 
                 <!-- widget div-->
                 <div role="content">
-
 
                     <!-- widget content -->
                     <div class="widget-body">
