@@ -90,7 +90,7 @@ class CustomerGeneral extends \yii\db\ActiveRecord
             'number_of_visits' => 'Number Of Visits',
             'signalling_type_id' => 'Signalling Type',
             'urn' => 'URN',
-            'nsi_number' => 'NSi Number',
+            'nsi_number' => 'Certificate Number',
             'maintenance_cost' => 'Maintenance Cost',
             'monitoring_cost' => 'Monitoring Cost',
             'other_label_id' => 'Other Label ID',

@@ -42,10 +42,9 @@ $this->beginPage();
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5 hidden-xs hidden-sm text-center">
-                <h1 class="txt-color-red login-header-big">MERLIN CRM System</h1>
+                <h1 class="txt-color-red login-header-big">Merlin CRM System</h1>
                 <div class="hero">
 
-                    <img src="/img/merlin.jpg">
                     <img src="/img/kse-logo-on-black.jpg">
 
                 </div>

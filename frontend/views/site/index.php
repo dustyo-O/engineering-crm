@@ -48,6 +48,6 @@ CSS
         <i class="fa fa-lg fa-handshake-o"></i> HR & Subcontractors
     </a>
     <a href="<?= Url::to(['service/list']) ?>" class="btn btn-primary btn-large btn-block">
-        <i class="fa fa-lg fa-wrench"></i> Services
+        <i class="fa fa-lg fa-wrench"></i> Service & Maintenance
     </a>
 </div>

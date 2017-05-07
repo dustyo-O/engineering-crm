@@ -1,3 +1,7 @@
+.login-header-big {
+    text-transform: uppercase;
+}
+
 label.with-plus-btn {
     width: calc(100% - 40px);
     top: -15px;
