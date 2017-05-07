@@ -40,7 +40,7 @@ CSS
 ?>
 <div class="index-menu">
     <h4>Welcome to Merlin</h4>
-    <h5>The Key Solution Customer Portal</h5>
+    <h5>The Key Solutions Customer Portal</h5>
     <a href="<?= Url::to(['customer/list']) ?>" class="btn btn-primary btn-large btn-block">
         <i class="fa fa-lg fa-male"></i> Customers
     </a>
