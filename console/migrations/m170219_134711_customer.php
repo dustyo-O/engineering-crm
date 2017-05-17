@@ -17,15 +17,15 @@ class m170219_134711_customer extends Migration
             'quote_id' => $this->integer()->notNull(),
             'general_id' => $this->integer()->notNull(),
             'customer' => $this->string()->notNull(),
-            'contact' => $this->string()->notNull(),
-            'telephone' => $this->string()->notNull(),
-            'address' => $this->text()->notNull(),
-            'job_title' => $this->string()->notNull(),
-            'email' => $this->string()->notNull(),
-            'mobile' => $this->string()->notNull(),
-            'system_type_id' => $this->integer()->notNull(),
-            'customer_status_id' => $this->integer()->notNull(),
-            'account_number' => $this->string()->notNull()
+            'contact' => $this->string(),
+            'telephone' => $this->string(),
+            'address' => $this->text(),
+            'job_title' => $this->string(),
+            'email' => $this->string(),
+            'mobile' => $this->string(),
+            'system_type_id' => $this->integer(),
+            'customer_status_id' => $this->integer(),
+            'account_number' => $this->string()
         ], $tableOptions);
 
         // Quote

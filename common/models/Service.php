@@ -35,7 +35,7 @@ class Service extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['customer', 'contact', 'telephone', 'address', 'call_type_id', 'date', 'time', 'problem_reported'], 'required'],
+            [['customer', 'date'], 'required'],
             [['address'], 'string'],
             [['call_type_id'], 'integer'],
             [['date', 'time'], 'safe'],

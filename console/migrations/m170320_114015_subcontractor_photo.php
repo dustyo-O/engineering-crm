@@ -6,7 +6,7 @@ class m170320_114015_subcontractor_photo extends Migration
 {
     public function safeUp()
     {
-        $this->addColumn('{{%subcontractor}}', 'photo_id', $this->integer()->notNull());
+        $this->addColumn('{{%subcontractor}}', 'photo_id', $this->integer());
 
         $this->createIndex('SUBCONTRACTOR_PHOTO_INDEX', '{{%subcontractor}}', 'photo_id');
         $this->addForeignKey('SUBCONTRACTOR_PHOTO',

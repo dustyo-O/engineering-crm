@@ -65,7 +65,7 @@ class Subcontractor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'company_name', 'date_of_commencement', 'address', 'status_id', 'telephone', 'mobile', 'email', 'ni_number', 'staff_number', 'position_id', 'vehicle_reg', 'ipaf', 'cscs', 'driving_license', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id', 'subcontractor_pack', 'training_courses', 'qualifications', 'insurance_expire', 'screening', 'hs_pack', 'notes', 'photo_id'], 'required'],
+            [['name'], 'required'],
             [['address', 'training_courses', 'qualifications', 'notes'], 'string'],
             [['status_id', 'position_id', 'cscs', 'other1_label_id', 'other1', 'other2_label_id', 'other2', 'other3_label_id', 'other3', 'first_aid_id', 'photo_id'], 'integer'],
             [['subcontractor_pack', 'insurance_expire', 'screening', 'hs_pack'], 'safe'],

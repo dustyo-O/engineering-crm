@@ -14,13 +14,13 @@ class m170219_133154_customer_quote extends Migration
 
         $this->createTable('{{%customer_quote}}', [
             'id' => $this->primaryKey(),
-            'client' => $this->string()->notNull(),
-            'contact' => $this->string()->notNull(),
-            'telephone' => $this->string()->notNull(),
-            'address' => $this->text()->notNull(),
-            'quote_number' => $this->string()->notNull(),
-            'quote_amount' => $this->string()->notNull(),
-            'quote_status_id' => $this->integer()->notNull(),
+            'client' => $this->string(),
+            'contact' => $this->string(),
+            'telephone' => $this->string(),
+            'address' => $this->text(),
+            'quote_number' => $this->string(),
+            'quote_amount' => $this->string(),
+            'quote_status_id' => $this->integer(),
             'notes' => $this->text()
         ], $tableOptions);
 

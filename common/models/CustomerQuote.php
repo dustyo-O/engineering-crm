@@ -37,7 +37,6 @@ class CustomerQuote extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['client', 'contact', 'telephone', 'address', 'quote_number', 'quote_amount', 'quote_status_id'], 'required'],
             [['address', 'notes'], 'string'],
             [['quote_status_id'], 'integer'],
             [['client', 'contact', 'telephone', 'quote_number', 'quote_amount'], 'string', 'max' => 255],

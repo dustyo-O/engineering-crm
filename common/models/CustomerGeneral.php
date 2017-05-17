@@ -24,7 +24,6 @@ use Yii;
  * @property integer $monitoring_cost
  * @property integer $other_label_id
  * @property integer $other_costs
- * @property integer $account_manager_id
  * @property integer $misc1_id
  * @property integer $misc1_label_id
  * @property integer $misc2_id
@@ -57,15 +56,12 @@ class CustomerGeneral extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['key_holder_1', 'key_holder_1_email', 'key_holder_1_phone', 'key_holder_2', 'key_holder_2_email', 'key_holder_2_phone', 'maintenance_contract_id', 'start_date', 'number_of_visits', 'signalling_type_id', 'urn', 'nsi_number', 'maintenance_cost', 'monitoring_cost', 'other_label_id', 'other_costs', 'account_manager_id', 'misc1_id', 'misc1_label_id', 'misc2_id', 'misc2_label_id'], 'required'],
-            [['maintenance_contract_id', 'number_of_visits', 'signalling_type_id', 'maintenance_cost', 'monitoring_cost', 'other_label_id', 'other_costs', 'account_manager_id', 'misc1_id', 'misc1_label_id', 'misc2_id', 'misc2_label_id'], 'integer'],
+            [['maintenance_contract_id', 'number_of_visits', 'signalling_type_id', 'maintenance_cost', 'monitoring_cost', 'other_label_id', 'other_costs', 'misc1', 'misc1_label_id', 'misc2', 'misc2_label_id'], 'integer'],
             [['start_date'], 'safe'],
             [['notes'], 'string'],
             [['key_holder_1', 'key_holder_1_email', 'key_holder_1_phone', 'key_holder_2', 'key_holder_2_email', 'key_holder_2_phone', 'urn', 'nsi_number'], 'string', 'max' => 255],
             [['maintenance_contract_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralMaintenanceContract::className(), 'targetAttribute' => ['maintenance_contract_id' => 'id']],
-            [['misc1_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralMisc1::className(), 'targetAttribute' => ['misc1_id' => 'id']],
             [['misc1_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralMisc1Label::className(), 'targetAttribute' => ['misc1_label_id' => 'id']],
-            [['misc2_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralMisc2::className(), 'targetAttribute' => ['misc2_id' => 'id']],
             [['misc2_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralMisc2Label::className(), 'targetAttribute' => ['misc2_label_id' => 'id']],
             [['other_label_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralOtherLabel::className(), 'targetAttribute' => ['other_label_id' => 'id']],
             [['signalling_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeneralSignallingType::className(), 'targetAttribute' => ['signalling_type_id' => 'id']],

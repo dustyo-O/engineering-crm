@@ -26,7 +26,7 @@ $js_events = json_encode($js_services);
 
 $this->registerJs(<<<JS
 $('.calendar').fullCalendar({
-    events: JSON.parse('{$js_events}'),
+    events: {$js_events},
     eventClick: function(event) {
         if (event.id) {
             window.location.href = '{$event_edit_url}' + event.id;

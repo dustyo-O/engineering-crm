@@ -30,13 +30,14 @@ $this->params['breadcrumbs'][] = "Customers";
             <?php
             foreach ($customers as $customer)
             {
+                $edit_url = Url::to(['customer/edit', 'id' => $customer->id]);
             ?>
             <tr>
-                <td><a href="<?= Url::to(['customer/edit', 'id' => $customer->id]) ?>"><?= $customer->quote->quote_number ?></a></td>
-                <td><?= $customer->customer ?></td>
+                <td><a href="<?= $edit_url ?>"><?= $customer->quote->quote_number ?></a></td>
+                <td><a href="<?= $edit_url ?>"><?= $customer->customer ?></a></td>
                 <td><?= $customer->account_number ?></td>
                 <td><?= $customer->contact ?></td>
-                <td><label class="label label-default"><?= $customer->customerStatus->title ?></label></td>
+                <td><label class="label label-default"><?= $customer->customerStatus ? $customer->customerStatus->title : 'n/a' ?></label></td>
                 <td><?= $customer->job_title ?></td>
                 <td><?= (new \DateTime($customer->general->start_date))->format('d F Y') ?></td>
             </tr>

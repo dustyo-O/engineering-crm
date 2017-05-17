@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = "HR & Subcontractors";
                                     ?>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <img src="<?= Url::to(['documents/download', 'id' => $subcontractor->photo_id]) ?>" class="img-responsive" alt="img">
+                                        <img src="<?= $subcontractor->photo_id ? Url::to(['documents/download', 'id' => $subcontractor->photo_id ]) : '/img/avatars/male.png" width="100%' ?>" class="img-responsive" alt="img">
                                         <ul class="list-inline padding-10">
                                             <li>
                                                 <i class="fa fa-calendar"></i>
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = "HR & Subcontractors";
                                                 </a>
                                             </li>
                                             <li class="pull-right">
-                                                Status: <label class="label label-success"><?= $subcontractor->status->title ?></label>
+                                                Status: <label class="label label-success"><?= $subcontractor->status ? $subcontractor->status->title : 'n/a' ?></label>
                                             </li>
                                         </ul>
                                     </div>

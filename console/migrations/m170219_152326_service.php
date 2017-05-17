@@ -15,13 +15,13 @@ class m170219_152326_service extends Migration
         $this->createTable('{{%service}}', [
             'id' => $this->primaryKey(),
             'customer' => $this->string()->notNull(),
-            'contact' => $this->string()->notNull(),
-            'telephone' => $this->string()->notNull(),
-            'address' => $this->text()->notNull(),
-            'call_type_id' => $this->integer()->notNull(),
+            'contact' => $this->string(),
+            'telephone' => $this->string(),
+            'address' => $this->text(),
+            'call_type_id' => $this->integer(),
             'date' => $this->dateTime()->notNull(),
-            'time' => $this->integer()->notNull(),
-            'problem_reported' => $this->string()->notNull()
+            'time' => $this->integer(),
+            'problem_reported' => $this->string()
         ], $tableOptions);
 
         // Call Type
