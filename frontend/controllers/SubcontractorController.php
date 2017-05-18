@@ -147,7 +147,13 @@ class SubcontractorController extends Controller
 
     public function actionDelete($id)
     {
+        if (Subcontractor::deleteAll(['id' => $id])) {
+            Yii::$app->session->setFlash('success', 'Subcontractor removed succesfully');
+        } else {
+            Yii::$app->session->setFlash('error', 'Error, subcontractor was not deleted');
+        }
 
+        return $this->redirect(Url::to(['subcontractor/list']));
     }
 
     public function actionList()
