@@ -365,8 +365,8 @@ $dropdown_template_no_title = $this->render('/construct/dropdown-no-title', []);
         </div>
         <!-- end widget -->
         <button class="btn btn-primary btn-lg save-button" type="submit"><i class="fa fa-save"></i> Save</button>
-        <a href="<?= Url::to(['service/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a>
-        <a href="<?= Url::to(['service/delete', 'id' => $subcontractor->id]) ?>" class="btn btn-danger pull-right delete-btn">
+        <a href="<?= Url::to(['subcontractor/list']) ?>" class="btn btn-default btn-lg" type="reset">Cancel</a>
+        <a href="<?= Url::to(['subcontractor/delete', 'id' => $subcontractor->id]) ?>" class="btn btn-danger pull-right delete-btn">
             <i class="fa fa-trash-o"></i> Delete
         </a>
         <?php
