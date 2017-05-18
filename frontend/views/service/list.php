@@ -16,8 +16,8 @@ $event_edit_url = Url::to(['service/edit', 'id' => '']);
 $js_services = [];
 foreach($services as $service) {
     $js_services[] = [
-        'title' => $service->problem_reported,
-        'start' => $service->date,
+        'title' => $service->customer,
+        'start' => (int) $service->time ? date('Y-m-d H:i', (int) $service->time) : $service->date,
         'id' => $service->id
     ];
 }
