@@ -3,7 +3,14 @@
 /* @var $customers \common\models\Customer[] */
 
 use yii\helpers\Url;
+use app\assets\DataTablesAsset;
 
+DataTablesAsset::register($this);
+
+$this->registerJS(<<<JS
+    $('.customer-table').dataTable();
+JS
+);
 $this->title = 'Customers list';
 
 $this->params['breadcrumbs'][] = "Customers";
@@ -14,7 +21,7 @@ $this->params['breadcrumbs'][] = "Customers";
     <!-- NEW WIDGET START -->
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <a class="btn btn-lg btn-success" href="<?= Url::to(['customer/create']) ?>">Create new customer</a>
-        <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
+        <table id="dt_basic" class="table table-striped table-bordered table-hover customer-table" width="100%">
             <thead>
             <tr>
                 <th data-hide="phone">Quote Number</th>
