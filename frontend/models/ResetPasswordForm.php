@@ -1,6 +1,7 @@
 <?php
 namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\base\InvalidParamException;
 use common\models\User;
@@ -11,6 +12,7 @@ use common\models\User;
 class ResetPasswordForm extends Model
 {
     public $password;
+    public $password_repeat;
 
     /**
      * @var \common\models\User
@@ -19,20 +21,16 @@ class ResetPasswordForm extends Model
 
 
     /**
-     * Creates a form model given a token.
+     * Creates a form model on current user.
      *
-     * @param string $token
      * @param array $config name-value pairs that will be used to initialize the object properties
      * @throws \yii\base\InvalidParamException if token is empty or not valid
      */
-    public function __construct($token, $config = [])
+    public function __construct($config = [])
     {
-        if (empty($token) || !is_string($token)) {
-            throw new InvalidParamException('Password reset token cannot be blank.');
-        }
-        $this->_user = User::findByPasswordResetToken($token);
+        $this->_user = Yii::$app->user->identity;
         if (!$this->_user) {
-            throw new InvalidParamException('Wrong password reset token.');
+            throw new InvalidParamException('No user');
         }
         parent::__construct($config);
     }
@@ -43,8 +41,9 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'required'],
+            [['password', 'password_repeat'], 'required'],
             ['password', 'string', 'min' => 6],
+            ['password', 'compare', 'compareAttribute' => 'password_repeat']
         ];
     }
 
@@ -55,10 +54,14 @@ class ResetPasswordForm extends Model
      */
     public function resetPassword()
     {
-        $user = $this->_user;
-        $user->setPassword($this->password);
-        $user->removePasswordResetToken();
+        if ($this->password === $this->password_repeat) 
+        {
+            $user = $this->_user;
+            $user->setPassword($this->password);
 
-        return $user->save(false);
+            return $user->save(false);
+        }
+
+        return false;
     }
 }

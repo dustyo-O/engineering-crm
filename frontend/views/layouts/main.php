@@ -72,6 +72,7 @@ JS
 
     <!-- #PROJECTS: projects dropdown -->
     <section class="logout">
+        <a href="<?= Url::to(['user/change-password']) ?>"><i class="fa fa-2x fa-key"></i></a>
         <a href="<?= Url::to(['site/logout']) ?>" data-method="post"><i class="fa fa-2x fa-sign-out"></i></a>
     </section>
     <!-- end projects dropdown -->
